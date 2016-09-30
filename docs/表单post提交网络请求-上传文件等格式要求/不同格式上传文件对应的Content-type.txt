@@ -1,0 +1,50 @@
+jpeg图片：
+Content-Type: image/jpeg
+
+war压缩包：
+Content-Type: application/octet-stream
+
+txt文本文件：
+Content-Type: text/plain
+
+microsoft word文件(.doc)：
+Content-Type: application/msword
+
+microsoft word文件(.docx):
+Content-Type: application/vnd.openxmlformats-officedocument.wordprocessingml.document
+
+AVI视频文件：
+Content-Type: video/avi
+
+mp3音频文件:
+Content-Type: audio/mp3
+
+.sql文本文件：
+Content-Type: application/octet-stream
+
+mp4视频文件：
+Content-Type: video/mp4
+
+.png图片：
+Content-Type: image/png
+
+excel文件：
+Content-Type: application/vnd.ms-excel
+
+.lrc歌词文件：
+Content-Type: application/octet-stream
+
+wma音频文件：
+Content-Type: audio/x-ms-wma
+
+rmvb视频文件：
+Content-Type: application/octet-stream
+
+.vsdx visio绘图文件：
+Content-Type: application/vnd.ms-visio.drawing
+
+.zip压缩文件：
+Content-Type: application/octet-stream
+
+.rar压缩文件：
+Content-Type: application/octet-stream

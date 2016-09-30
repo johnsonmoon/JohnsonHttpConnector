@@ -1,0 +1,157 @@
+搜狗浏览器：
+
+------WebKitFormBoundaryN8jHSve5rqKgHOkq
+Content-Disposition: form-data; name="Acc_name"
+
+aas
+------WebKitFormBoundaryN8jHSve5rqKgHOkq
+Content-Disposition: form-data; name="Acc_pwd"
+
+ad
+------WebKitFormBoundaryN8jHSve5rqKgHOkq
+Content-Disposition: form-data; name="file"; filename="newFile.txt"
+Content-Type: text/plain
+
+addauigd
+afcaoiufa
+afgda
+fefre
+afretg
+vgdcxv
+h
+rg
+rsdg
+sg
+
+
+segfs
+segfse
+
+segfs
+------WebKitFormBoundaryN8jHSve5rqKgHOkq--
+
+
+IE浏览器：
+
+-----------------------------7e03bc3bb0666
+Content-Disposition: form-data; name="Acc_name"
+
+admin
+-----------------------------7e03bc3bb0666
+Content-Disposition: form-data; name="Acc_pwd"
+
+admin
+-----------------------------7e03bc3bb0666
+Content-Disposition: form-data; name="file"; filename="newFile.txt"
+Content-Type: text/plain
+
+addauigd
+afcaoiufa
+afgda
+fefre
+afretg
+vgdcxv
+h
+rg
+rsdg
+sg
+
+
+segfs
+segfse
+
+segfs
+-----------------------------7e03bc3bb0666--
+
+
+chrome浏览器：
+
+------WebKitFormBoundaryqqB2I9JGBYCWVzUH
+Content-Disposition: form-data; name="Acc_name"
+
+admin
+------WebKitFormBoundaryqqB2I9JGBYCWVzUH
+Content-Disposition: form-data; name="Acc_pwd"
+
+admin
+------WebKitFormBoundaryqqB2I9JGBYCWVzUH
+Content-Disposition: form-data; name="file"; filename="newFile.txt"
+Content-Type: text/plain
+
+addauigd
+afcaoiufa
+afgda
+fefre
+afretg
+vgdcxv
+h
+rg
+rsdg
+sg
+
+
+segfs
+segfse
+
+segfs
+------WebKitFormBoundaryqqB2I9JGBYCWVzUH--
+
+
+360浏览器：
+
+
+------WebKitFormBoundaryprRm6scCeF1UeNno
+Content-Disposition: form-data; name="Acc_name"
+
+admin
+------WebKitFormBoundaryprRm6scCeF1UeNno
+Content-Disposition: form-data; name="Acc_pwd"
+
+admin
+------WebKitFormBoundaryprRm6scCeF1UeNno
+Content-Disposition: form-data; name="file"; filename="newFile.txt"
+Content-Type: text/plain
+
+addauigd
+afcaoiufa
+afgda
+fefre
+afretg
+vgdcxv
+h
+rg
+rsdg
+sg
+
+
+segfs
+segfse
+
+segfs
+------WebKitFormBoundaryprRm6scCeF1UeNno--
+
+
+FireFox浏览器：
+-----------------------------1643465204132705341663992983
+Content-Disposition: form-data; name="Acc_name"
+
+
+-----------------------------1643465204132705341663992983
+Content-Disposition: form-data; name="Acc_pwd"
+
+
+-----------------------------1643465204132705341663992983
+Content-Disposition: form-data; name="file"; filename="uploadFile.txt"
+Content-Type: text/plain
+
+Hello! Johnson!
+I love to watch movies and eat good!
+jadihf
+afvjapivha
+vaj oihaouea
+vaij  fcavaoieh a
+vaev haouvh
+aoaiyefa
+ahvo avh
+
+-----------------------------1643465204132705341663992983--
