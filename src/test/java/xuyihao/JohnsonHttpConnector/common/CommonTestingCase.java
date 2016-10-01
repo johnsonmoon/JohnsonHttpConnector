@@ -8,25 +8,38 @@ import java.net.URL;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 
+ * 
+ * create by Xuyh at 2016年10月1日 下午11:16:08.
+ *
+ */
 public class CommonTestingCase {
 	private static BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
 	public static void main(String[] args) {
 		String url = input();
-		
-		Map<String, List<String>> fields = getConnectionHeaderFields(url);
-		for (String key : fields.keySet()) {
-			String out = key + " : ";
-			for (String value : fields.get(key)) {
-				out += (value + " || ");
-			}
-			out = out.substring(0, out.length() - 5);
-			output(out);
-		}
-		
 		/*
+				Map<String, List<String>> fields = getConnectionHeaderFields(url);
+				for (String key : fields.keySet()) {
+					String out = key + " : ";
+					for (String value : fields.get(key)) {
+						out += (value + " || ");
+					}
+					out = out.substring(0, out.length() - 5);
+					output(out);
+				}
+		*/
 		String cookie = getCookie(url);
+		if (cookie == null || cookie.equals("")) {
+			output("yes");
+		}
 		output(cookie);
+
+		/*
+		String test = "test=kkl";
+		test = test.substring(test.indexOf("=") + 1);
+		output(test);
 		*/
 	}
 
@@ -60,7 +73,7 @@ public class CommonTestingCase {
 		try {
 			URL url = new URL(actionURL);
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-			cookieValue = connection.getHeaderField("set-cookie");
+			cookieValue = connection.getHeaderField("Set-Cookie");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

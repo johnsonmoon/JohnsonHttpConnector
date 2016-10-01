@@ -1,4 +1,4 @@
-package xuyihao.JohnsonHttpConnector.connectors;
+package xuyihao.JohnsonHttpConnector.connectors.http;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -11,7 +11,9 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Set;
 
+import xuyihao.JohnsonHttpConnector.connectors.http.entity.Cookie;
 import xuyihao.JohnsonHttpConnector.enums.MIME_FileType;
+import xuyihao.JohnsonHttpConnector.utils.RandomUtils;
 
 /**
  * 网络请求类
@@ -26,68 +28,34 @@ import xuyihao.JohnsonHttpConnector.enums.MIME_FileType;
 public class RequestSender {
 	private final String end = "\r\n";
 	private final String twoHyphens = "--";
-	private final String boundary = "---------------------------7e0dd540448";
-	private String sessionID = "";
+	private final String boundary = "----------------------" + RandomUtils.getRandomString(18);
+	/**
+	 * cookie的配置逻辑：
+	 * 每次请求发送时候都会在请求头带上cookie信息(如果cookie为null则不带上),
+	 * 然后从响应头中获取新的cookie值刷新当前值,可以起到保存同服务器的会话的作用
+	 */
+	private Cookie cookie = null;
 
 	public RequestSender() {
 	}
 
-	/**
-	 * <pre>
-	 * 通过此构造器可以区分使用此工具的平台，并且获取相应URL服务器的会话sessionID
-	 * 
-	 * 不一定会获取到URL的session
-	 * </pre>
-	 * 
-	 * @param actionURL 需要获取会话sessionID的URL
-	 */
-	public RequestSender(String actionURL) {
-		this.getSessionIDFromCookie(actionURL);
+	public RequestSender(Cookie cookie) {
+		this.cookie = cookie;
+	}
+
+	public Cookie getCookie() {
+		return cookie;
+	}
+
+	public void setCookie(Cookie cookie) {
+		this.cookie = cookie;
 	}
 
 	/**
-	 * 执行从cookie获取会话sessionID的方法，用于保持与服务器的会话
-	 * 
-	 * <pre>
-	 * 执行次方法后执行其他请求方法将会提交cookie，保持会话
-	 * </pre>
-	 * 
-	 * @param actionURL
-	 * @return
+	 * 删除cookie信息，使cookie无效
 	 */
-	public boolean getSessionIDFromCookie(String actionURL) {
-		boolean flag = false;
-		try {
-			URL url = new URL(actionURL);
-			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-			String cookieValue = connection.getHeaderField("set-cookie");
-			if (cookieValue != null) {
-				this.sessionID = cookieValue.substring(0, cookieValue.indexOf(";"));
-				flag = true;
-			} else {
-				flag = false;
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-			flag = false;
-		}
-		return flag;
-	}
-
-	/**
-	 * 获取连接的sessionID
-	 * 
-	 * @return
-	 */
-	public String getSessionID() {
-		return this.sessionID;
-	}
-
-	/**
-	 * 使连接的sessionID无效，即删除会话信息
-	 */
-	public void invalidateSessionID() {
-		this.sessionID = "";
+	public void invalidateCookie() {
+		this.cookie = null;
 	}
 
 	/**
@@ -96,7 +64,7 @@ public class RequestSender {
 	 * <pre>
 	 * 发送请求使用enctype="application/x-www-form-urlencoded"编码方式
 	 * 参数形式形如key1=value1&key2=value2
-	 * 如果存在会话，本方法可以保持会话，如果要消除会话，请使用invalidateSessionID方法
+	 * 如果存在会话，本方法可以保持会话，如果要消除会话，请使用invalidateCookie方法
 	 * </pre>
 	 * 
 	 * @param actionURL
@@ -117,9 +85,9 @@ public class RequestSender {
 			connection.setRequestProperty("Charset", "UTF-8");
 			;
 			connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-			// 如果存在会话，则写入会话sessionID到cookie里面
-			if (!this.sessionID.equals("")) {
-				connection.setRequestProperty("cookie", this.sessionID);
+			// 如果cookie不为空
+			if (this.cookie != null) {
+				connection.setRequestProperty("cookie", this.cookie.convertCookieToCookieValueString());
 			}
 			// 设置请求数据内容
 			String requestContent = "";
@@ -132,6 +100,11 @@ public class RequestSender {
 			// 使用write(requestContent.getBytes())是为了防止中文出现乱码
 			ds.write(requestContent.getBytes());
 			ds.flush();
+			//获取服务器响应头的cookie信息
+			String set_cookie = connection.getHeaderField("Set-Cookie");
+			if (set_cookie != null && !set_cookie.equals("")) {
+				this.cookie = Cookie.newCookieInstance(set_cookie);
+			}
 			try {
 				// 获取URL的响应
 				BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream(), "utf-8"));
@@ -160,7 +133,7 @@ public class RequestSender {
 	 * <pre>
 	 * 发送请求使用enctype="multipart/form-data"编码方式
 	 * 请求内容格式参考表单提交方式
-	 * 如果存在会话，本方法可以保持会话，如果要消除会话，请使用invalidateSessionID方法
+	 * 如果存在会话，本方法可以保持会话，如果要消除会话，请使用invalidateCookie方法
 	 * </pre>
 	 * 
 	 * @param actionURL
@@ -183,8 +156,9 @@ public class RequestSender {
 			connection.setRequestProperty("Charset", "UTF-8");
 			connection.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + boundary);
 			// 如果存在会话，则写入会话sessionID到cookie里面
-			if (!this.sessionID.equals("")) {
-				connection.setRequestProperty("cookie", this.sessionID);
+			// 如果cookie不为空
+			if (this.cookie != null) {
+				connection.setRequestProperty("cookie", this.cookie.convertCookieToCookieValueString());
 			}
 			// 获取请求内容输出流
 			DataOutputStream ds = new DataOutputStream(connection.getOutputStream());
@@ -204,6 +178,11 @@ public class RequestSender {
 			ds.writeBytes(twoHyphens + boundary + twoHyphens + end);
 			ds.writeBytes(end);
 			ds.flush();
+			//获取服务器响应头的cookie信息
+			String set_cookie = connection.getHeaderField("Set-Cookie");
+			if (set_cookie != null && !set_cookie.equals("")) {
+				this.cookie = Cookie.newCookieInstance(set_cookie);
+			}
 			try {
 				// 获取URL的响应
 				BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream(), "utf-8"));
@@ -232,7 +211,7 @@ public class RequestSender {
 	 * <pre>
 	 * 直接通过actionURL发送请求,用户也可以自己设置actionURL后面的参数
 	 * 这个方法比HashMap传递参数的方法性能要高
-	 * 如果存在会话，本方法可以保持会话，如果要消除会话，请使用invalidateSessionID方法
+	 * 如果存在会话，本方法可以保持会话，如果要消除会话，请使用invalidateCookie方法
 	 * </pre>
 	 * 
 	 * @param actionURL 发送get请求的URL地址(例如：http://www.johnson.cc:8080/Test/download)
@@ -245,9 +224,14 @@ public class RequestSender {
 			URL url = new URL(trueRequestURL);
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 			connection.setRequestMethod("GET");
-			// 如果存在会话，则写入会话sessionID到cookie里面
-			if (!this.sessionID.equals("")) {
-				connection.setRequestProperty("cookie", this.sessionID);
+			// 如果cookie不为空
+			if (this.cookie != null) {
+				connection.setRequestProperty("cookie", this.cookie.convertCookieToCookieValueString());
+			}
+			//获取服务器响应头的cookie信息
+			String set_cookie = connection.getHeaderField("Set-Cookie");
+			if (set_cookie != null && !set_cookie.equals("")) {
+				this.cookie = Cookie.newCookieInstance(set_cookie);
 			}
 			try {
 				// 获取URL的响应
@@ -275,7 +259,7 @@ public class RequestSender {
 	 * 
 	 * <pre>
 	 * 最后发送的URL格式为(例如:http://www.johnson.cc:8080/Test/download?file=file1&name=xxx&pwd=aaa)
-	 * 如果存在会话，本方法可以保持会话，如果要消除会话，请使用invalidateSessionID方法
+	 * 如果存在会话，本方法可以保持会话，如果要消除会话，请使用invalidateCookie方法
 	 * </pre>
 	 * 
 	 * @param actionURL 发送get请求的URL地址(例如：http://www.johnson.cc:8080/Test/download)
@@ -295,9 +279,14 @@ public class RequestSender {
 			URL url = new URL(trueRequestURL);
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 			connection.setRequestMethod("GET");
-			// 如果存在会话，则写入会话sessionID到cookie里面
-			if (!this.sessionID.equals("")) {
-				connection.setRequestProperty("cookie", this.sessionID);
+			// 如果cookie不为空
+			if (this.cookie != null) {
+				connection.setRequestProperty("cookie", this.cookie.convertCookieToCookieValueString());
+			}
+			//获取服务器响应头的cookie信息
+			String set_cookie = connection.getHeaderField("Set-Cookie");
+			if (set_cookie != null && !set_cookie.equals("")) {
+				this.cookie = Cookie.newCookieInstance(set_cookie);
 			}
 			try {
 				// 获取URL的响应
@@ -325,7 +314,7 @@ public class RequestSender {
 	 * 
 	 * <pre>
 	 * 上传文件name为file(服务器解析)
-	 * 如果存在会话，本方法可以保持会话，如果要消除会话，请使用invalidateSessionID方法
+	 * 如果存在会话，本方法可以保持会话，如果要消除会话，请使用invalidateCookie方法
 	 * </pre>
 	 * 
 	 * @param actionURL 上传文件的URL
@@ -347,9 +336,9 @@ public class RequestSender {
 			connection.setRequestProperty("Connection", "Keep-Alive");
 			connection.setRequestProperty("Charset", "UTF-8");
 			connection.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + boundary);
-			// 如果存在会话，则写入会话sessionID到cookie里面
-			if (!this.sessionID.equals("")) {
-				connection.setRequestProperty("cookie", this.sessionID);
+			// 如果cookie不为空
+			if (this.cookie != null) {
+				connection.setRequestProperty("cookie", this.cookie.convertCookieToCookieValueString());
 			}
 			// 获取请求内容输出流
 			DataOutputStream ds = new DataOutputStream(connection.getOutputStream());
@@ -374,6 +363,11 @@ public class RequestSender {
 			ds.writeBytes(twoHyphens + boundary + twoHyphens + end);
 			ds.writeBytes(end);
 			ds.flush();
+			//获取服务器响应头的cookie信息
+			String set_cookie = connection.getHeaderField("Set-Cookie");
+			if (set_cookie != null && !set_cookie.equals("")) {
+				this.cookie = Cookie.newCookieInstance(set_cookie);
+			}
 			try {
 				// 获取URL的响应
 				BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream(), "utf-8"));
@@ -401,7 +395,7 @@ public class RequestSender {
 	 * 
 	 * <pre>
 	 * 上传文件name为file0,file1,file2,以此类推(服务器解析)
-	 * 如果存在会话，本方法可以保持会话，如果要消除会话，请使用invalidateSessionID方法
+	 * 如果存在会话，本方法可以保持会话，如果要消除会话，请使用invalidateCookie方法
 	 * </pre>
 	 * 
 	 * @param actionURL 上传文件的URL地址包括URL
@@ -423,9 +417,9 @@ public class RequestSender {
 			connection.setRequestProperty("Connection", "Keep-Alive");
 			connection.setRequestProperty("Charset", "UTF-8");
 			connection.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + boundary);
-			// 如果存在会话，则写入会话sessionID到cookie里面
-			if (!this.sessionID.equals("")) {
-				connection.setRequestProperty("cookie", this.sessionID);
+			// 如果cookie不为空
+			if (this.cookie != null) {
+				connection.setRequestProperty("cookie", this.cookie.convertCookieToCookieValueString());
 			}
 			// 获取请求内容输出流
 			DataOutputStream ds = new DataOutputStream(connection.getOutputStream());
@@ -452,6 +446,11 @@ public class RequestSender {
 			ds.writeBytes(twoHyphens + boundary + twoHyphens + end);
 			ds.writeBytes(end);
 			ds.flush();
+			//获取服务器响应头的cookie信息
+			String set_cookie = connection.getHeaderField("Set-Cookie");
+			if (set_cookie != null && !set_cookie.equals("")) {
+				this.cookie = Cookie.newCookieInstance(set_cookie);
+			}
 			try {
 				// 获取URL的响应
 				BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream(), "utf-8"));
@@ -479,7 +478,7 @@ public class RequestSender {
 	 * 
 	 * <pre>
 	 * 上传文件name为file(服务器解析)
-	 * 如果存在会话，本方法可以保持会话，如果要消除会话，请使用invalidateSessionID方法
+	 * 如果存在会话，本方法可以保持会话，如果要消除会话，请使用invalidateCookie方法
 	 * </pre>
 	 * 
 	 * @param actionURL 上传文件的URL地址包括URL
@@ -503,9 +502,9 @@ public class RequestSender {
 			connection.setRequestProperty("Connection", "Keep-Alive");
 			connection.setRequestProperty("Charset", "UTF-8");
 			connection.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + boundary);
-			// 如果存在会话，则写入会话sessionID到cookie里面
-			if (!this.sessionID.equals("")) {
-				connection.setRequestProperty("cookie", this.sessionID);
+			// 如果cookie不为空
+			if (this.cookie != null) {
+				connection.setRequestProperty("cookie", this.cookie.convertCookieToCookieValueString());
 			}
 			// 获取请求内容输出流
 			DataOutputStream ds = new DataOutputStream(connection.getOutputStream());
@@ -542,6 +541,11 @@ public class RequestSender {
 			ds.writeBytes(twoHyphens + boundary + twoHyphens + end);
 			ds.writeBytes(end);
 			ds.flush();
+			//获取服务器响应头的cookie信息
+			String set_cookie = connection.getHeaderField("Set-Cookie");
+			if (set_cookie != null && !set_cookie.equals("")) {
+				this.cookie = Cookie.newCookieInstance(set_cookie);
+			}
 			try {
 				// 获取URL的响应
 				BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream(), "utf-8"));
@@ -568,7 +572,7 @@ public class RequestSender {
 	 * 集上传多个文件与传递参数于一体的方法
 	 * 
 	 * <pre>
-	 * 如果存在会话，本方法可以保持会话，如果要消除会话，请使用invalidateSessionID方法
+	 * 如果存在会话，本方法可以保持会话，如果要消除会话，请使用invalidateCookie方法
 	 * 上传文件name为file0,file1,file2,以此类推(服务器解析)
 	 * </pre>
 	 * 
@@ -593,9 +597,9 @@ public class RequestSender {
 			connection.setRequestProperty("Connection", "Keep-Alive");
 			connection.setRequestProperty("Charset", "UTF-8");
 			connection.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + boundary);
-			// 如果存在会话，则写入会话sessionID到cookie里面
-			if (!this.sessionID.equals("")) {
-				connection.setRequestProperty("cookie", this.sessionID);
+			// 如果cookie不为空
+			if (this.cookie != null) {
+				connection.setRequestProperty("cookie", this.cookie.convertCookieToCookieValueString());
 			}
 			// 获取请求内容输出流
 			DataOutputStream ds = new DataOutputStream(connection.getOutputStream());
@@ -635,6 +639,11 @@ public class RequestSender {
 			ds.writeBytes(twoHyphens + boundary + twoHyphens + end);
 			ds.writeBytes(end);
 			ds.flush();
+			//获取服务器响应头的cookie信息
+			String set_cookie = connection.getHeaderField("Set-Cookie");
+			if (set_cookie != null && !set_cookie.equals("")) {
+				this.cookie = Cookie.newCookieInstance(set_cookie);
+			}
 			try {
 				// 获取URL的响应
 				BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream(), "utf-8"));

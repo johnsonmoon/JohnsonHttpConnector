@@ -1,4 +1,4 @@
-package xuyihao.JohnsonHttpConnector.connectors;
+package xuyihao.JohnsonHttpConnector.connectors.http;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -8,13 +8,15 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Set;
 
+import xuyihao.JohnsonHttpConnector.connectors.http.entity.Cookie;
+
 /**
  * 网络资源(文件)多线程下载工具类
  * 
  * <pre>
  * 发送GET请求，接收网络文件
  * 此工具类支持多线程下载
- * 添加会话(session)支持,在一些需要保持会话状态下载文件的情况下,通过HttpUtil获取的sessionID进行sessionID的初始化
+ * 添加cookie支持
  * 需要服务器端发送文件内容长度响应，即响应头部包含文件长度Content-length
  * 如果获取不到文件长度，则download方法会结束并返回false
  * </pre>
@@ -23,7 +25,12 @@ import java.util.Set;
  *
  */
 public class MultiThreadDownloader {
-	private String sessionID = "";
+	/**
+	 * cookie的配置逻辑：
+	 * 每次请求发送时候都会在请求头带上cookie信息(如果cookie为null则不带上),
+	 * 然后从响应头中获取新的cookie值刷新当前值,可以起到保存同服务器的会话的作用
+	 */
+	private Cookie cookie = null;
 	private String trueRequestURL = "";
 	private int threadNum = 0;
 	private long fileSize = 0;
@@ -63,10 +70,10 @@ public class MultiThreadDownloader {
 	 * @param actionURL 需要下载资源的URL地址
 	 * @param parameters URL后的具体参数，以key=value的形式传递
 	 * @param threadNumber 需要启动的下载线程数量
-	 * @param requestSender 已经获取sessionID的HttpUtil工具类,用来初始化本类的sessionID
+	 * @param cookie 保持会话信息的cookie
 	 */
 	public MultiThreadDownloader(String actionURL, HashMap<String, String> parameters, int threadNumber,
-			RequestSender requestSender) {
+			Cookie cookie) {
 		this.trueRequestURL = actionURL;
 		trueRequestURL += "?";
 		Set<String> keys = parameters.keySet();
@@ -76,34 +83,28 @@ public class MultiThreadDownloader {
 		trueRequestURL = trueRequestURL.substring(0, trueRequestURL.lastIndexOf("&"));
 		this.threadNum = threadNumber;
 		this.threads = new DownloadThread[this.threadNum];
-		this.sessionID = requestSender.getSessionID();
+		this.cookie = cookie;
+	}
+
+	public Cookie getCookie() {
+		return cookie;
+	}
+
+	public void setCookie(Cookie cookie) {
+		this.cookie = cookie;
 	}
 
 	/**
-	 * 通过本包的HttoUtil工具类已经获取的sessionID来对本工具sessionID进行初始化的方法
-	 * 
-	 * <pre>
-	 * 只能通过传入HttpUtil工具类来进行初始化,避免直接对sessionID字串进行赋值
-	 * 适用于一些只能保持会话状态才能下载文件的情况
-	 * </pre>
-	 * 
-	 * @param requestSender 已经获取sessionID的HttpUtil工具类
+	 * 使cookie无效，即删除会话信息
 	 */
-	public void setSessionID(RequestSender requestSender) {
-		this.sessionID = requestSender.getSessionID();
-	}
-
-	/**
-	 * 使工具类中的sessionID无效，即删除会话信息
-	 */
-	public void invalidateSessionID() {
-		this.sessionID = "";
+	public void invalidateCookie() {
+		this.cookie = null;
 	}
 
 	/**
 	 * <pre>
 	 * 开始多线程下载
-	 * 如果存在会话，本方法可以保持会话，如果要消除会话，请使用invalidateSessionID方法
+	 * 如果存在会话，本方法可以保持会话，如果要消除会话，请使用invalidateCookie方法
 	 * </pre>
 	 * 
 	 * @param targetFilePathName 文件的目标保存完整路径文件名称
@@ -116,9 +117,9 @@ public class MultiThreadDownloader {
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 			connection.setConnectTimeout(5 * 1000);
 			connection.setRequestMethod("GET");
-			//如果存在会话，则写入会话sessionID到cookie里面
-			if (!this.sessionID.equals("")) {
-				connection.setRequestProperty("cookie", this.sessionID);
+			// 如果cookie不为空
+			if (this.cookie != null) {
+				connection.setRequestProperty("cookie", this.cookie.convertCookieToCookieValueString());
 			}
 			connection.setRequestProperty("Accept",
 					"image/gif, image/jpeg, image/pjpeg, image/pjpeg, "
@@ -129,6 +130,11 @@ public class MultiThreadDownloader {
 			connection.setRequestProperty("Accept-Language", "zh-CN");
 			connection.setRequestProperty("Charset", "UTF-8");
 			connection.setRequestProperty("Connection", "Keep-Alive");
+			//获取服务器响应头的cookie信息
+			String set_cookie = connection.getHeaderField("Set-Cookie");
+			if (set_cookie != null && !set_cookie.equals("")) {
+				this.cookie = Cookie.newCookieInstance(set_cookie);
+			}
 			//check whether wen can get the exact length by the server, if not, stop the program
 			//检查能否获取到准确的文件长度，如果不能则结束程序并报错
 			if (connection.getContentLength() == -1) {
@@ -149,10 +155,10 @@ public class MultiThreadDownloader {
 					//locate the download position for the thread
 					currentFilePart.seek(startPosition);
 					//create thread
-					if (this.sessionID.equals("")) {
+					if (this.cookie == null) {
 						threads[i] = new DownloadThread(startPosition, currentPartSize, currentFilePart);
 					} else {
-						threads[i] = new DownloadThread(startPosition, currentPartSize, currentFilePart, this.sessionID);
+						threads[i] = new DownloadThread(startPosition, currentPartSize, currentFilePart, this.cookie);
 					}
 					threads[i].start();
 				}
@@ -169,7 +175,7 @@ public class MultiThreadDownloader {
 	 * 
 	 * <pre>
 	 * 开始多线程下载
-	 * 如果存在会话，本方法可以保持会话，如果要消除会话，请使用invalidateSessionID方法
+	 * 如果存在会话，本方法可以保持会话，如果要消除会话，请使用invalidateCookie方法
 	 * 如果没有获取服务器响应的文件名,则返回false,结束下载
 	 * </pre>
 	 * 
@@ -183,9 +189,9 @@ public class MultiThreadDownloader {
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 			connection.setConnectTimeout(5 * 1000);
 			connection.setRequestMethod("GET");
-			//如果存在会话，则写入会话sessionID到cookie里面
-			if (!this.sessionID.equals("")) {
-				connection.setRequestProperty("cookie", this.sessionID);
+			// 如果cookie不为空
+			if (this.cookie != null) {
+				connection.setRequestProperty("cookie", this.cookie.convertCookieToCookieValueString());
 			}
 			connection.setRequestProperty("Accept",
 					"image/gif, image/jpeg, image/pjpeg, image/pjpeg, "
@@ -196,6 +202,11 @@ public class MultiThreadDownloader {
 			connection.setRequestProperty("Accept-Language", "zh-CN");
 			connection.setRequestProperty("Charset", "UTF-8");
 			connection.setRequestProperty("Connection", "Keep-Alive");
+			//获取服务器响应头的cookie信息
+			String set_cookie = connection.getHeaderField("Set-Cookie");
+			if (set_cookie != null && !set_cookie.equals("")) {
+				this.cookie = Cookie.newCookieInstance(set_cookie);
+			}
 			//check whether wen can get the exact length by the server, if not, stop the program
 			//检查能否获取到准确的文件长度，如果不能则结束程序并报错
 			if (connection.getContentLength() == -1) {
@@ -224,10 +235,10 @@ public class MultiThreadDownloader {
 						//locate the download position for the thread
 						currentFilePart.seek(startPosition);
 						//create thread
-						if (this.sessionID.equals("")) {
+						if (this.cookie == null) {
 							threads[i] = new DownloadThread(startPosition, currentPartSize, currentFilePart);
 						} else {
-							threads[i] = new DownloadThread(startPosition, currentPartSize, currentFilePart, this.sessionID);
+							threads[i] = new DownloadThread(startPosition, currentPartSize, currentFilePart, this.cookie);
 						}
 						threads[i].start();
 					}
@@ -288,7 +299,7 @@ public class MultiThreadDownloader {
 	 *
 	 */
 	private class DownloadThread extends Thread {
-		private String sessionID = "";
+		private Cookie cookie = null;
 		/**
 		 * start position for the current thread
 		 * 
@@ -312,8 +323,8 @@ public class MultiThreadDownloader {
 			this.currentFilePart = currentPart;
 		}
 
-		public DownloadThread(long startPos, long currentPartSize, RandomAccessFile currentPart, String sessionIDh) {
-			this.sessionID = sessionIDh;
+		public DownloadThread(long startPos, long currentPartSize, RandomAccessFile currentPart, Cookie cookie) {
+			this.cookie = cookie;
 			this.startPosition = startPos;
 			this.currentPartSize = currentPartSize;
 			this.currentFilePart = currentPart;
@@ -326,9 +337,9 @@ public class MultiThreadDownloader {
 				HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 				connection.setConnectTimeout(5 * 1000);
 				connection.setRequestMethod("GET");
-				//如果存在会话，则写入会话sessionID到cookie里面
-				if (!this.sessionID.equals("")) {
-					connection.setRequestProperty("cookie", this.sessionID);
+				// 如果cookie不为空
+				if (this.cookie != null) {
+					connection.setRequestProperty("cookie", this.cookie.convertCookieToCookieValueString());
 				}
 				connection.setRequestProperty("Accept",
 						"image/gif, image/jpeg, image/pjpeg, image/pjpeg, "

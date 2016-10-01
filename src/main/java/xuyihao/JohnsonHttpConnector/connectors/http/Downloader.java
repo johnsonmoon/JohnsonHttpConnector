@@ -1,4 +1,4 @@
-package xuyihao.JohnsonHttpConnector.connectors;
+package xuyihao.JohnsonHttpConnector.connectors.http;
 
 import java.io.DataOutputStream;
 import java.io.File;
@@ -9,6 +9,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Set;
+
+import xuyihao.JohnsonHttpConnector.connectors.http.entity.Cookie;
 
 /**
  * 网络资源(文件)下载工具类
@@ -23,15 +25,19 @@ import java.util.Set;
  *  	等方法之前需要先调用initializeStates方法初始化状态变量
  *  (4)如果需要新建线程并使用 getCompleteRate 
  *  	方法查看进度, 也需要在调用下载的方法之前创建并start()
- *  (5)添加会话(session)支持,在一些需要保持会话状态下载文件的情况下,
- *  	通过HttpUtil获取的sessionID进行sessionID的初始化
+ *  (5)添加cookie支持,在一些需要保持会话状态下载文件的情况下
  *  (6)添加查看进度支持,需要调用 getCompleteRate 方法
  * </pre>
  * 
  * @Author Xuyh created at 2016年9月30日 下午4:34:39
  */
 public class Downloader {
-	private String sessionID = "";
+	/**
+	 * cookie的配置逻辑：
+	 * 每次请求发送时候都会在请求头带上cookie信息(如果cookie为null则不带上),
+	 * 然后从响应头中获取新的cookie值刷新当前值,可以起到保存同服务器的会话的作用
+	 */
+	private Cookie cookie = null;
 	private long fileTotalLength = 0;
 	private long fileReceiveLength = 0;
 	/**
@@ -50,32 +56,23 @@ public class Downloader {
 	public Downloader() {
 	}
 
-	/**
-	 * 
-	 * @param requestSender 已经获取sessionID的HttpUtil工具类,用来初始化本类的sessionID
-	 */
-	public Downloader(RequestSender requestSender) {
-		this.sessionID = requestSender.getSessionID();
+	public Downloader(Cookie cookie) {
+		this.cookie = cookie;
+	}
+
+	public Cookie getCookie() {
+		return cookie;
+	}
+
+	public void setCookie(Cookie cookie) {
+		this.cookie = cookie;
 	}
 
 	/**
-	 * <pre>
-	 * 通过本包的HttoUtil工具类已经获取的sessionID来对本工具sessionID进行初始化的方法
-	 * 只能通过传入HttpUtil工具类来进行初始化,避免直接对sessionID字串进行赋值
-	 * 适用于一些只能保持会话状态才能下载文件的情况
-	 * </pre>
-	 * 
-	 * @param requestSender httpUtil 已经获取sessionID的HttpUtil工具类
+	 * 使cookie无效，即删除会话信息
 	 */
-	public void setSessionID(RequestSender requestSender) {
-		this.sessionID = requestSender.getSessionID();
-	}
-
-	/**
-	 * 使工具类中的sessionID无效，即删除会话信息
-	 */
-	public void invalidateSessionID() {
-		this.sessionID = "";
+	public void invalidateCookie() {
+		this.cookie = null;
 	}
 
 	/**
@@ -83,7 +80,7 @@ public class Downloader {
 	 * 
 	 * <pre>
 	 * 直接通过参数actionURL发送请求,用户也可以通过自己设置actionURL后的参数发送请求
-	 * 如果存在会话，本方法可以保持会话，如果要消除会话，请使用invalidateSessionID方法
+	 * 如果存在会话，本方法可以保持会话，如果要消除会话，请使用invalidateCookie方法
 	 * </pre>
 	 * 
 	 * @param actionURL 发送get请求的URL地址(例如：http://www.johnson.cc:8080/Test/download)
@@ -101,9 +98,9 @@ public class Downloader {
 			URL url = new URL(trueRequestURL);
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 			connection.setRequestMethod("GET");
-			// 如果存在会话，则写入会话sessionID到cookie里面
-			if (!this.sessionID.equals("")) {
-				connection.setRequestProperty("cookie", this.sessionID);
+			// 如果cookie不为空
+			if (this.cookie != null) {
+				connection.setRequestProperty("cookie", this.cookie.convertCookieToCookieValueString());
 			}
 			// get the length of the file, if get, set ableToCaculate true
 			long getLength = connection.getContentLength();
@@ -113,6 +110,11 @@ public class Downloader {
 			} else {
 				this.ableToCaculate = true;
 				this.fileTotalLength = getLength;
+			}
+			//获取服务器响应头的cookie信息
+			String set_cookie = connection.getHeaderField("Set-Cookie");
+			if (set_cookie != null && !set_cookie.equals("")) {
+				this.cookie = Cookie.newCookieInstance(set_cookie);
 			}
 			try {
 				// 获取URL的响应
@@ -142,8 +144,8 @@ public class Downloader {
 	 * 执行Get请求下载文件的方法
 	 * 
 	 * <pre>
-	 * 最后发送的URL格式为(例如:http://www.johnson.cc:8080/Test/download?file=file1&name=XXX&pwd=aaa)
-	 * 如果存在会话，本方法可以保持会话，如果要消除会话，请使用invalidateSessionID方法
+	 * 最后发送的URL格式为(例如:http://www.johnson.cc:8080/Test/download?file=file1&name=xxx&pwd=aaa)
+	 * 如果存在会话，本方法可以保持会话，如果要消除会话，请使用invalidateCookie方法
 	 * </pre>
 	 * 
 	 * @param actionURL 发送get请求的URL地址(例如：http://www.johnson.cc:8080/Test/download)
@@ -168,9 +170,9 @@ public class Downloader {
 			URL url = new URL(trueRequestURL);
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 			connection.setRequestMethod("GET");
-			// 如果存在会话，则写入会话sessionID到cookie里面
-			if (!this.sessionID.equals("")) {
-				connection.setRequestProperty("cookie", this.sessionID);
+			// 如果cookie不为空
+			if (this.cookie != null) {
+				connection.setRequestProperty("cookie", this.cookie.convertCookieToCookieValueString());
 			}
 			// get the length of the file, if get, set ableToCaculate true
 			long getLength = connection.getContentLength();
@@ -180,6 +182,11 @@ public class Downloader {
 			} else {
 				this.ableToCaculate = true;
 				this.fileTotalLength = getLength;
+			}
+			//获取服务器响应头的cookie信息
+			String set_cookie = connection.getHeaderField("Set-Cookie");
+			if (set_cookie != null && !set_cookie.equals("")) {
+				this.cookie = Cookie.newCookieInstance(set_cookie);
 			}
 			try {
 				// 获取URL的响应
@@ -211,7 +218,7 @@ public class Downloader {
 	 * <pre>
 	 * 直接通过参数actionURL发送请求,用户也可以通过自己设置actionURL后的参数发送请求
 	 * 最后文件会以savePathName的路径名形式存储到磁盘中
-	 * 如果存在会话，本方法可以保持会话，如果要消除会话，请使用invalidateSessionID方法
+	 * 如果存在会话，本方法可以保持会话，如果要消除会话，请使用invalidateCookie方法
 	 * </pre>
 	 * 
 	 * @param savePathName 文件在磁盘中的储存路径&文件名,文件路径+名称需要自己定义
@@ -230,9 +237,9 @@ public class Downloader {
 			URL url = new URL(trueRequestURL);
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 			connection.setRequestMethod("GET");
-			// 如果存在会话，则写入会话sessionID到cookie里面
-			if (!this.sessionID.equals("")) {
-				connection.setRequestProperty("cookie", this.sessionID);
+			// 如果cookie不为空
+			if (this.cookie != null) {
+				connection.setRequestProperty("cookie", this.cookie.convertCookieToCookieValueString());
 			}
 			// get the length of the file, if get, set ableToCaculate true
 			long getLength = connection.getContentLength();
@@ -242,6 +249,11 @@ public class Downloader {
 			} else {
 				this.ableToCaculate = true;
 				this.fileTotalLength = getLength;
+			}
+			//获取服务器响应头的cookie信息
+			String set_cookie = connection.getHeaderField("Set-Cookie");
+			if (set_cookie != null && !set_cookie.equals("")) {
+				this.cookie = Cookie.newCookieInstance(set_cookie);
 			}
 			try {
 				// 获取URL的响应
@@ -278,9 +290,9 @@ public class Downloader {
 	 * 执行Get请求下载文件的方法
 	 * 
 	 * <pre>
-	 * 最后发送的URL格式为(例如:http://www.johnson.cc:8080/Test/download?file=file1&name=XXX&pwd=aaa)
+	 * 最后发送的URL格式为(例如:http://www.johnson.cc:8080/Test/download?file=file1&name=xxx&pwd=aaa)
 	 * 最后文件会以savePathName的路径名形式存储到磁盘中
-	 * 如果存在会话，本方法可以保持会话，如果要消除会话，请使用invalidateSessionID方法
+	 * 如果存在会话，本方法可以保持会话，如果要消除会话，请使用invalidateCookie方法
 	 * </pre>
 	 * 
 	 * @param savePathName 文件在磁盘中的储存路径&文件名,文件路径+名称需要自己定义
@@ -307,9 +319,9 @@ public class Downloader {
 			URL url = new URL(trueRequestURL);
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 			connection.setRequestMethod("GET");
-			// 如果存在会话，则写入会话sessionID到cookie里面
-			if (!this.sessionID.equals("")) {
-				connection.setRequestProperty("cookie", this.sessionID);
+			// 如果cookie不为空
+			if (this.cookie != null) {
+				connection.setRequestProperty("cookie", this.cookie.convertCookieToCookieValueString());
 			}
 			// get the length of the file, if get, set ableToCaculate true
 			long getLength = connection.getContentLength();
@@ -319,6 +331,11 @@ public class Downloader {
 			} else {
 				this.ableToCaculate = true;
 				this.fileTotalLength = getLength;
+			}
+			//获取服务器响应头的cookie信息
+			String set_cookie = connection.getHeaderField("Set-Cookie");
+			if (set_cookie != null && !set_cookie.equals("")) {
+				this.cookie = Cookie.newCookieInstance(set_cookie);
 			}
 			try {
 				// 获取URL的响应
@@ -358,7 +375,7 @@ public class Downloader {
 	 * 直接通过参数actionURL发送请求,用户也可以通过自己设置actionURL后的参数发送请求
 	 * 最后文件会存储到savePath路径中,路径需要以参数方式传入,文件名通过服务器获得
 	 * 如果没有获取服务器响应传回的文件名,则返回false
-	 * 如果存在会话，本方法可以保持会话，如果要消除会话，请使用invalidateSessionID方法
+	 * 如果存在会话，本方法可以保持会话，如果要消除会话，请使用invalidateCookie方法
 	 * </pre>
 	 * 
 	 * @param savePath 文件在磁盘中的储存路径,文件名会从服务器获得
@@ -377,9 +394,9 @@ public class Downloader {
 			URL url = new URL(trueRequestURL);
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 			connection.setRequestMethod("GET");
-			// 如果存在会话，则写入会话sessionID到cookie里面
-			if (!this.sessionID.equals("")) {
-				connection.setRequestProperty("cookie", this.sessionID);
+			// 如果cookie不为空
+			if (this.cookie != null) {
+				connection.setRequestProperty("cookie", this.cookie.convertCookieToCookieValueString());
 			}
 			// get the length of the file, if get, set ableToCaculate true
 			long getLength = connection.getContentLength();
@@ -389,6 +406,11 @@ public class Downloader {
 			} else {
 				this.ableToCaculate = true;
 				this.fileTotalLength = getLength;
+			}
+			//获取服务器响应头的cookie信息
+			String set_cookie = connection.getHeaderField("Set-Cookie");
+			if (set_cookie != null && !set_cookie.equals("")) {
+				this.cookie = Cookie.newCookieInstance(set_cookie);
 			}
 			String ContentDisposition = connection.getHeaderField("Content-Disposition");
 			if (ContentDisposition == null) {
@@ -433,10 +455,10 @@ public class Downloader {
 	 * 执行Get请求下载文件的方法
 	 * 
 	 * <pre>
-	 * 最后发送的URL格式为(例如:http://www.johnson.cc:8080/Test/download?file=file1&name=XXX&pwd=aaa)
+	 * 最后发送的URL格式为(例如:http://www.johnson.cc:8080/Test/download?file=file1&name=xxx&pwd=aaa)
 	 * 最后文件会存储到savePath路径中,路径需要以参数方式传入,文件名通过服务器获得
 	 * 如果没有获取服务器响应传回的文件名,则返回false
-	 * 如果存在会话，本方法可以保持会话，如果要消除会话，请使用invalidateSessionID方法
+	 * 如果存在会话，本方法可以保持会话，如果要消除会话，请使用invalidateCookie方法
 	 * </pre>
 	 * 
 	 * @param savePath 文件在磁盘中的储存路径,文件名会从服务器获得
@@ -462,9 +484,9 @@ public class Downloader {
 			URL url = new URL(trueRequestURL);
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 			connection.setRequestMethod("GET");
-			// 如果存在会话，则写入会话sessionID到cookie里面
-			if (!this.sessionID.equals("")) {
-				connection.setRequestProperty("cookie", this.sessionID);
+			// 如果cookie不为空
+			if (this.cookie != null) {
+				connection.setRequestProperty("cookie", this.cookie.convertCookieToCookieValueString());
 			}
 			// get the length of the file, if get, set ableToCaculate true
 			long getLength = connection.getContentLength();
@@ -474,6 +496,11 @@ public class Downloader {
 			} else {
 				this.ableToCaculate = true;
 				this.fileTotalLength = getLength;
+			}
+			//获取服务器响应头的cookie信息
+			String set_cookie = connection.getHeaderField("Set-Cookie");
+			if (set_cookie != null && !set_cookie.equals("")) {
+				this.cookie = Cookie.newCookieInstance(set_cookie);
 			}
 			String ContentDisposition = connection.getHeaderField("Content-Disposition");
 			if (ContentDisposition == null) {
@@ -519,7 +546,7 @@ public class Downloader {
 	 * 
 	 * <pre>
 	 * 请求内容在HTTP报文内容中
-	 * 如果存在会话，本方法可以保持会话，如果要消除会话，请使用invalidateSessionID方法
+	 * 如果存在会话，本方法可以保持会话，如果要消除会话，请使用invalidateCookie方法
 	 * </pre>
 	 * 
 	 * @param actionURL 发送get请求的URL地址(例如：http://www.johnson.cc:8080/Test/download)
@@ -544,9 +571,9 @@ public class Downloader {
 			connection.setRequestProperty("Charset", "UTF-8");
 			;
 			connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-			// 如果存在会话，则写入会话sessionID到cookie里面
-			if (!this.sessionID.equals("")) {
-				connection.setRequestProperty("cookie", this.sessionID);
+			// 如果cookie不为空
+			if (this.cookie != null) {
+				connection.setRequestProperty("cookie", this.cookie.convertCookieToCookieValueString());
 			}
 			// 设置请求数据内容
 			String requestContent = "";
@@ -567,6 +594,11 @@ public class Downloader {
 			} else {
 				this.ableToCaculate = true;
 				this.fileTotalLength = getLength;
+			}
+			//获取服务器响应头的cookie信息
+			String set_cookie = connection.getHeaderField("Set-Cookie");
+			if (set_cookie != null && !set_cookie.equals("")) {
+				this.cookie = Cookie.newCookieInstance(set_cookie);
 			}
 			try {
 				// 获取URL的响应
@@ -598,9 +630,9 @@ public class Downloader {
 	 * 执行发送post请求的方法
 	 * 
 	 * <pre>
-	 * 最后发送的URL格式为(例如:http://www.johnson.cc:8080/Test/download?file=file1&name=XXX&pwd=aaa)
+	 * 最后发送的URL格式为(例如:http://www.johnson.cc:8080/Test/download?file=file1&name=xxx&pwd=aaa)
 	 * 最后文件会以savePathName的路径名形式存储到磁盘中
-	 * 如果存在会话，本方法可以保持会话，如果要消除会话，请使用invalidateSessionID方法
+	 * 如果存在会话，本方法可以保持会话，如果要消除会话，请使用invalidateCookie方法
 	 * </pre>
 	 * 
 	 * @param savePathName 文件在磁盘中的储存路径&文件名,文件路径+名称需要自己定义
@@ -626,9 +658,9 @@ public class Downloader {
 			connection.setRequestProperty("Charset", "UTF-8");
 			;
 			connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-			// 如果存在会话，则写入会话sessionID到cookie里面
-			if (!this.sessionID.equals("")) {
-				connection.setRequestProperty("cookie", this.sessionID);
+			// 如果cookie不为空
+			if (this.cookie != null) {
+				connection.setRequestProperty("cookie", this.cookie.convertCookieToCookieValueString());
 			}
 			// 设置请求数据内容
 			String requestContent = "";
@@ -649,6 +681,11 @@ public class Downloader {
 			} else {
 				this.ableToCaculate = true;
 				this.fileTotalLength = getLength;
+			}
+			//获取服务器响应头的cookie信息
+			String set_cookie = connection.getHeaderField("Set-Cookie");
+			if (set_cookie != null && !set_cookie.equals("")) {
+				this.cookie = Cookie.newCookieInstance(set_cookie);
 			}
 			try {
 				// 获取URL的响应
@@ -686,10 +723,10 @@ public class Downloader {
 	 * 执行发送post请求的方法
 	 * 
 	 * <pre>
-	 * 最后发送的URL格式为(例如:http://www.johnson.cc:8080/Test/download?file=file1&name=XXX&pwd=aaa)
+	 * 最后发送的URL格式为(例如:http://www.johnson.cc:8080/Test/download?file=file1&name=xxx&pwd=aaa)
 	 * 最后文件会存储到savePath路径中,路径需要以参数方式传入,文件名通过服务器获得
 	 * 如果没有获取服务器响应传回的文件名,则返回false
-	 * 如果存在会话，本方法可以保持会话，如果要消除会话，请使用invalidateSessionID方法
+	 * 如果存在会话，本方法可以保持会话，如果要消除会话，请使用invalidateCookie方法
 	 * </pre>
 	 * 
 	 * @param savePath 文件在磁盘中的储存路径,文件名会从服务器获得
@@ -715,9 +752,9 @@ public class Downloader {
 			connection.setRequestProperty("Charset", "UTF-8");
 			;
 			connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-			// 如果存在会话，则写入会话sessionID到cookie里面
-			if (!this.sessionID.equals("")) {
-				connection.setRequestProperty("cookie", this.sessionID);
+			// 如果cookie不为空
+			if (this.cookie != null) {
+				connection.setRequestProperty("cookie", this.cookie.convertCookieToCookieValueString());
 			}
 			// 设置请求数据内容
 			String requestContent = "";
@@ -738,6 +775,11 @@ public class Downloader {
 			} else {
 				this.ableToCaculate = true;
 				this.fileTotalLength = getLength;
+			}
+			//获取服务器响应头的cookie信息
+			String set_cookie = connection.getHeaderField("Set-Cookie");
+			if (set_cookie != null && !set_cookie.equals("")) {
+				this.cookie = Cookie.newCookieInstance(set_cookie);
 			}
 			String ContentDisposition = connection.getHeaderField("Content-Disposition");
 			if (ContentDisposition == null) {
