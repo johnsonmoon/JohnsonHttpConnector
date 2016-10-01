@@ -23,13 +23,13 @@ import xuyihao.JohnsonHttpConnector.enums.MIME_FileType;
  * 
  * @Author Xuyh created at 2016年9月30日 下午5:15:45
  */
-public class HttpUtil {
+public class RequestSender {
 	private final String end = "\r\n";
 	private final String twoHyphens = "--";
 	private final String boundary = "---------------------------7e0dd540448";
 	private String sessionID = "";
 
-	public HttpUtil() {
+	public RequestSender() {
 	}
 
 	/**
@@ -41,7 +41,7 @@ public class HttpUtil {
 	 * 
 	 * @param actionURL 需要获取会话sessionID的URL
 	 */
-	public HttpUtil(String actionURL) {
+	public RequestSender(String actionURL) {
 		this.getSessionIDFromCookie(actionURL);
 	}
 

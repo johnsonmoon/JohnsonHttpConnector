@@ -30,7 +30,7 @@ import java.util.Set;
  * 
  * @Author Xuyh created at 2016年9月30日 下午4:34:39
  */
-public class DownUtil {
+public class Downloader {
 	private String sessionID = "";
 	private long fileTotalLength = 0;
 	private long fileReceiveLength = 0;
@@ -47,15 +47,15 @@ public class DownUtil {
 	 */
 	private boolean ifDownloadFailed = false;
 
-	public DownUtil() {
+	public Downloader() {
 	}
 
 	/**
 	 * 
-	 * @param httpUtil 已经获取sessionID的HttpUtil工具类,用来初始化本类的sessionID
+	 * @param requestSender 已经获取sessionID的HttpUtil工具类,用来初始化本类的sessionID
 	 */
-	public DownUtil(HttpUtil httpUtil) {
-		this.sessionID = httpUtil.getSessionID();
+	public Downloader(RequestSender requestSender) {
+		this.sessionID = requestSender.getSessionID();
 	}
 
 	/**
@@ -65,10 +65,10 @@ public class DownUtil {
 	 * 适用于一些只能保持会话状态才能下载文件的情况
 	 * </pre>
 	 * 
-	 * @param httpUtil httpUtil 已经获取sessionID的HttpUtil工具类
+	 * @param requestSender httpUtil 已经获取sessionID的HttpUtil工具类
 	 */
-	public void setSessionID(HttpUtil httpUtil) {
-		this.sessionID = httpUtil.getSessionID();
+	public void setSessionID(RequestSender requestSender) {
+		this.sessionID = requestSender.getSessionID();
 	}
 
 	/**
@@ -786,7 +786,7 @@ public class DownUtil {
 	 * @param behind 后面的数组
 	 * @return byte[] 返回一个新数组
 	 */
-	public byte[] connectTwoByteArrays(byte[] front, byte[] behind) {
+	private byte[] connectTwoByteArrays(byte[] front, byte[] behind) {
 		byte[] total = new byte[front.length + behind.length];
 		System.arraycopy(front, 0, total, 0, front.length);
 		System.arraycopy(behind, 0, total, front.length, behind.length);
@@ -864,14 +864,14 @@ public class DownUtil {
 	 * @Author Xuyh created at 2016年9月30日 下午5:01:33
 	 */
 	private class CheckThread extends Thread {
-		private DownUtil down;
+		private Downloader down;
 		private int showTime = 1000;
 
-		public CheckThread(DownUtil d) {
+		public CheckThread(Downloader d) {
 			this.down = d;
 		}
 
-		public CheckThread(DownUtil d, int showTime) {
+		public CheckThread(Downloader d, int showTime) {
 			this.down = d;
 			this.showTime = showTime * 1000;
 		}
