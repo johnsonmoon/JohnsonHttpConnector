@@ -1,12 +1,19 @@
 package xuyihao.JohnsonHttpConnector.common;
 
-import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import xuyihao.JohnsonHttpConnector.common.utils.CommonUtils;
+import xuyihao.JohnsonHttpConnector.connectors.http.Downloader;
+import xuyihao.JohnsonHttpConnector.connectors.http.MultiThreadDownloader;
+import xuyihao.JohnsonHttpConnector.connectors.http.RequestSender;
+import xuyihao.JohnsonHttpConnector.enums.MIME_FileType;
+import xuyihao.JohnsonHttpConnector.utils.RandomUtils;
 
 /**
  * 
@@ -15,32 +22,101 @@ import java.util.Map;
  *
  */
 public class CommonTestingCase {
-	private static BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-
 	public static void main(String[] args) {
-		String url = input();
-		/*
-				Map<String, List<String>> fields = getConnectionHeaderFields(url);
-				for (String key : fields.keySet()) {
-					String out = key + " : ";
-					for (String value : fields.get(key)) {
-						out += (value + " || ");
-					}
-					out = out.substring(0, out.length() - 5);
-					output(out);
-				}
-		*/
+		String url = CommonUtils.input();
+
+		Map<String, List<String>> fields = getConnectionHeaderFields(url);
+		for (String key : fields.keySet()) {
+			String out = key + " : ";
+			for (String value : fields.get(key)) {
+				out += (value + " || ");
+			}
+			out = out.substring(0, out.length() - 5);
+			CommonUtils.output(out);
+		}
+
 		String cookie = getCookie(url);
 		if (cookie == null || cookie.equals("")) {
-			output("yes");
+			CommonUtils.output("yes");
 		}
-		output(cookie);
+		CommonUtils.output(cookie);
 
-		/*
 		String test = "test=kkl";
 		test = test.substring(test.indexOf("=") + 1);
-		output(test);
-		*/
+		CommonUtils.output(test);
+		testDownload();
+		testDownloadByMultiThread();
+		testUploadFile();
+		testMkDir();
+		testSendingRequestToRongYi();
+	}
+
+	public static void testSendingRequestToRongYi() {
+		RequestSender sender = new RequestSender();
+		String actionURL = "http://127.0.0.1:8095/rongyi/accounts";
+		HashMap<String, String> parameters = new HashMap<String, String>();
+		parameters.put("action", "register");
+		parameters.put("Acc_name", RandomUtils.getRandomString(12));
+		parameters.put("Acc_pwd", "123456");
+		parameters.put("Acc_sex", "男");
+		parameters.put("Acc_loc", "浙江工业大学");
+		CommonUtils.output(sender.executePostByUsual(actionURL, parameters));
+		String Acc_ID = CommonUtils.input();
+		HashMap<String, String> parameters2 = new HashMap<String, String>();
+		parameters2.put("action", "addHeadPhoto");
+		parameters2.put("Acc_ID", Acc_ID);
+		CommonUtils.output(sender.singleFileUploadWithParameters(actionURL, "C:\\Users\\Johnson\\Pictures\\发送\\3.jpg",
+				"file", MIME_FileType.Image_jpg, parameters2));
+
+		String actionURL2 = "http://127.0.0.1:8095/rongyi/courses";
+		HashMap<String, String> parameters3 = new HashMap<String, String>();
+		parameters3.put("action", "addCrs");
+		parameters3.put("Crs_name", RandomUtils.getRandomString(14));
+		sender.singleFileUploadWithParameters(actionURL2, "E:\\1.mp4", "file", MIME_FileType.Video_mp4, parameters3);
+	}
+
+	public static void testMkDir() {
+		String path = "C:\\Users\\Johnson\\Desktop";
+		String absolutePath = path + File.separator + "LMMNHDMKK" + File.separator + "photo" + File.separator + "vedioPhoto"
+				+ File.separator + "vmn";
+		File file = new File(absolutePath);
+		if (!file.exists()) {
+			file.mkdirs();
+		}
+	}
+
+	public static void testUploadFile() {
+		String actionURL = "http://115.28.192.61:8088/rongyi/accounts";
+		RequestSender sender = new RequestSender();
+		CommonUtils.output(sender.executeGet(actionURL + "?action=register&Acc_name=" + RandomUtils.getRandomString(5)
+				+ "Acc_pwd=jjnma&Acc_sex=M&Acc_loc=kmn"));
+		CommonUtils.output("Input Acc_ID: ");
+		String Acc_ID = CommonUtils.input();
+		CommonUtils.output(sender.singleFileUpload(actionURL + "?action=addHeadPhoto&Acc_ID=" + Acc_ID,
+				"C:\\Users\\Johnson\\Desktop\\minion.jpeg", "file", MIME_FileType.Image_jpeg));
+	}
+
+	public static void testDownload() {
+		String actionURL = "http://115.28.192.61:8088/rongyi/courses";
+		RequestSender sender = new RequestSender();
+		CommonUtils.output(sender.executeGet(actionURL + "?action=getCachedCoursesList"));
+		Downloader downloader = new Downloader(sender.getCookie());
+		CommonUtils.output("Input Vedio_ID: ");
+		String Vedio_ID = CommonUtils.input();
+		downloader.downloadByGet("C:\\Users\\Johnson\\Desktop\\kkmlml.mp4",
+				actionURL + "?action=getVedioById&Vedio_ID=" + Vedio_ID);
+	}
+
+	public static void testDownloadByMultiThread() {
+		String actionURL = "http://115.28.192.61:8088/rongyi/courses";
+		RequestSender sender = new RequestSender();
+		CommonUtils.output(sender.executeGet(actionURL + "?action=getCachedCoursesList"));
+		CommonUtils.output("Input Vedio_ID: ");
+		String Vedio_ID = CommonUtils.input();
+		MultiThreadDownloader downloader = new MultiThreadDownloader(
+				actionURL + "?action=getVedioById&Vedio_ID=" + Vedio_ID, 5);
+		downloader.setCookie(sender.getCookie());
+		downloader.download("C:\\Users\\Johnson\\Desktop\\kkmadjioajfoial.mp4");
 	}
 
 	/**
@@ -78,29 +154,5 @@ public class CommonTestingCase {
 			e.printStackTrace();
 		}
 		return cookieValue;
-	}
-
-	/**
-	 * 控制台输入字串
-	 * 
-	 * @return
-	 */
-	public static String input() {
-		String result = "";
-		try {
-			result = reader.readLine();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return result;
-	}
-
-	/**
-	 * 控制台输出
-	 * 
-	 * @param output
-	 */
-	public static void output(String output) {
-		System.out.println(output);
 	}
 }

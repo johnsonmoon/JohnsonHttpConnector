@@ -15,6 +15,7 @@ public class Cookie {
 	public final static String COOKIE_ATTRIBUTE_NAME_DOMAIN = "domain";
 	public final static String COOKIE_ATTRIBUTE_NAME_SECURE = "secure";
 	public final static String COOKIE_ATTRIBUTE_NAME_HTTPONLY = "HttpOnly";
+	public final static String COOKIE_ATTRIBUTE_NAME_HTTPONLY_LOWERCASE = "httponly";
 	/**
 	 * cookie的有效值
 	 */
@@ -47,15 +48,15 @@ public class Cookie {
 		Cookie cookie = new Cookie();
 		String[] params = set_cookie.split("; ");
 		for (String param : params) {
-			if (param.contains(COOKIE_ATTRIBUTE_NAME_PATH)) {
+			if (param.toLowerCase().contains(COOKIE_ATTRIBUTE_NAME_PATH)) {
 				cookie.setPath(param.substring(param.indexOf("=") + 1));
-			} else if (param.contains(COOKIE_ATTRIBUTE_NAME_DOMAIN)) {
+			} else if (param.toLowerCase().contains(COOKIE_ATTRIBUTE_NAME_DOMAIN)) {
 				cookie.setDomain(param.substring(param.indexOf("=") + 1));
-			} else if (param.contains(COOKIE_ATTRIBUTE_NAME_EXPIRE)) {
+			} else if (param.toLowerCase().contains(COOKIE_ATTRIBUTE_NAME_EXPIRE)) {
 				cookie.setExpire(param.substring(param.indexOf("=") + 1));
-			} else if (param.contains(COOKIE_ATTRIBUTE_NAME_SECURE)) {
+			} else if (param.toLowerCase().contains(COOKIE_ATTRIBUTE_NAME_SECURE)) {
 				cookie.setSecure(true);
-			} else if (param.contains(COOKIE_ATTRIBUTE_NAME_HTTPONLY)) {
+			} else if (param.toLowerCase().contains(COOKIE_ATTRIBUTE_NAME_HTTPONLY_LOWERCASE)) {
 				cookie.setHttpOnly(true);
 			} else {
 				String[] nameAndValue = param.split("=");

@@ -313,16 +313,16 @@ public class RequestSender {
 	 * 模拟提交表单数据上传单个文件
 	 * 
 	 * <pre>
-	 * 上传文件name为file(服务器解析)
 	 * 如果存在会话，本方法可以保持会话，如果要消除会话，请使用invalidateCookie方法
 	 * </pre>
 	 * 
 	 * @param actionURL 上传文件的URL
 	 * @param uploadFile 上传文件的路径字符串
+	 * @param formFileName 表单中文件的名称
 	 * @param fileType 文件类型(枚举类型)
 	 * @return "" if no response get
 	 */
-	public String singleFileUpload(String actionURL, String uploadFile, MIME_FileType fileType) {
+	public String singleFileUpload(String actionURL, String uploadFile, String formFileName, MIME_FileType fileType) {
 		String response = "";
 		try {
 			URL url = new URL(actionURL);
@@ -345,7 +345,7 @@ public class RequestSender {
 			String fileName = uploadFile.substring(uploadFile.lastIndexOf(File.separator) + 1);
 			// 开始写表单格式内容
 			ds.writeBytes(twoHyphens + boundary + end);
-			ds.writeBytes("Content-Disposition: form-data; " + "name=\"file\"; " + "filename=\"");
+			ds.writeBytes("Content-Disposition: form-data; " + "name=\""+formFileName+"\"; " + "filename=\"");
 			// 防止中文乱码
 			ds.write(fileName.getBytes());
 			ds.writeBytes("\"" + end);
@@ -393,17 +393,17 @@ public class RequestSender {
 	/**
 	 * 模拟提交表单数据上传多个文件的方法
 	 * 
-	 * <pre>
-	 * 上传文件name为file0,file1,file2,以此类推(服务器解析)
+	 * <pre></pre>
 	 * 如果存在会话，本方法可以保持会话，如果要消除会话，请使用invalidateCookie方法
 	 * </pre>
 	 * 
 	 * @param actionURL 上传文件的URL地址包括URL
 	 * @param uploadFiles 上传文件的路径字符串数组,表示多个文件
+	 * @param formFileNames 表单中的文件名称数组
 	 * @param fileType 文件类型(枚举类型)
 	 * @return "" if no response get
 	 */
-	public String multipleFileUpload(String actionURL, String[] uploadFiles, MIME_FileType fileType) {
+	public String multipleFileUpload(String actionURL, String[] uploadFiles, String[] formFileNames, MIME_FileType fileType) {
 		String response = "";
 		try {
 			URL url = new URL(actionURL);
@@ -428,7 +428,7 @@ public class RequestSender {
 				String uploadFile = uploadFiles[i];
 				String fileName = uploadFile.substring(uploadFile.lastIndexOf(File.separator) + 1);
 				ds.writeBytes(twoHyphens + boundary + end);
-				ds.writeBytes("Content-Disposition: form-data; " + "name=\"file" + i + "\"; " + "filename=\"");
+				ds.writeBytes("Content-Disposition: form-data; " + "name=\""+formFileNames[i]+"\"; " + "filename=\"");
 				// 防止中文乱码
 				ds.write(fileName.getBytes());
 				ds.writeBytes("\"" + end);
@@ -483,11 +483,12 @@ public class RequestSender {
 	 * 
 	 * @param actionURL 上传文件的URL地址包括URL
 	 * @param uploadFile 上传文件的路径字符串
+	 * @param formFileName 表单文件的名称
 	 * @param fileType 文件类型(枚举类型)
 	 * @param parameters 跟文件一起传输的参数(HashMap)
 	 * @return "" if no response get
 	 */
-	public String singleFileUploadWithParameters(String actionURL, String uploadFile, MIME_FileType fileType,
+	public String singleFileUploadWithParameters(String actionURL, String uploadFile, String formFileName, MIME_FileType fileType,
 			HashMap<String, String> parameters) {
 		String response = "";
 		try {
@@ -523,7 +524,7 @@ public class RequestSender {
 			}
 			// 写文件
 			ds.writeBytes(twoHyphens + boundary + end);
-			ds.writeBytes("Content-Disposition: form-data; " + "name=\"file\"; " + "filename=\"");
+			ds.writeBytes("Content-Disposition: form-data; " + "name=\""+formFileName+"\"; " + "filename=\"");
 			// 防止中文乱码
 			ds.write(fileName.getBytes());
 			ds.writeBytes("\"" + end);
@@ -578,11 +579,12 @@ public class RequestSender {
 	 * 
 	 * @param actionURL 上传文件的URL地址包括URL
 	 * @param uploadFiles 上传文件的路径字符串数组,表示多个文件
+	 * @param formFileNames 表单文件名称数组
 	 * @param fileType 文件类型(枚举类型)
 	 * @param parameters 跟文件一起传输的参数(HashMap)
 	 * @return "" if no response get
 	 */
-	public String multipleFileUploadWithParameters(String actionURL, String[] uploadFiles, MIME_FileType fileType,
+	public String multipleFileUploadWithParameters(String actionURL, String[] uploadFiles, String[] formFileNames, MIME_FileType fileType,
 			HashMap<String, String> parameters) {
 		String response = "";
 		try {
@@ -620,7 +622,7 @@ public class RequestSender {
 				String uploadFile = uploadFiles[i];
 				String fileName = uploadFile.substring(uploadFile.lastIndexOf(File.separator) + 1);
 				ds.writeBytes(twoHyphens + boundary + end);
-				ds.writeBytes("Content-Disposition: form-data; " + "name=\"file" + i + "\"; " + "filename=\"");
+				ds.writeBytes("Content-Disposition: form-data; " + "name=\""+formFileNames[i]+"\"; " + "filename=\"");
 				// 防止中文乱码
 				ds.write(fileName.getBytes());
 				ds.writeBytes("\"" + end);
