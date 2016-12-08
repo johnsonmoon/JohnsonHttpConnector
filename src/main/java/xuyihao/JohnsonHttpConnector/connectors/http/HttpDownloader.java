@@ -10,7 +10,7 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Set;
 
-import xuyihao.JohnsonHttpConnector.connectors.http.entity.Cookie;
+import xuyihao.JohnsonHttpConnector.entity.Cookie;
 
 /**
  * 网络资源(文件)下载工具类
@@ -31,7 +31,7 @@ import xuyihao.JohnsonHttpConnector.connectors.http.entity.Cookie;
  * 
  * @Author Xuyh created at 2016年9月30日 下午4:34:39
  */
-public class Downloader {
+public class HttpDownloader {
 	/**
 	 * cookie的配置逻辑：
 	 * 每次请求发送时候都会在请求头带上cookie信息(如果cookie为null则不带上),
@@ -53,10 +53,10 @@ public class Downloader {
 	 */
 	private boolean ifDownloadFailed = false;
 
-	public Downloader() {
+	public HttpDownloader() {
 	}
 
-	public Downloader(Cookie cookie) {
+	public HttpDownloader(Cookie cookie) {
 		this.cookie = cookie;
 	}
 
@@ -906,14 +906,14 @@ public class Downloader {
 	 * @Author Xuyh created at 2016年9月30日 下午5:01:33
 	 */
 	private class CheckThread extends Thread {
-		private Downloader down;
+		private HttpDownloader down;
 		private int showTime = 1000;
 
-		public CheckThread(Downloader d) {
+		public CheckThread(HttpDownloader d) {
 			this.down = d;
 		}
 
-		public CheckThread(Downloader d, int showTime) {
+		public CheckThread(HttpDownloader d, int showTime) {
 			this.down = d;
 			this.showTime = showTime * 1000;
 		}

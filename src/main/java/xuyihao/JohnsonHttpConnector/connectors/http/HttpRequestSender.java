@@ -11,21 +11,21 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Set;
 
-import xuyihao.JohnsonHttpConnector.connectors.http.entity.Cookie;
+import xuyihao.JohnsonHttpConnector.entity.Cookie;
 import xuyihao.JohnsonHttpConnector.enums.MIME_FileType;
 import xuyihao.JohnsonHttpConnector.utils.RandomUtils;
 
 /**
- * 网络请求类
+ * 网络请求类(Http)
  * 
  * <pre>
  * 发送GET POST请求, 接收字符串返回值
- * 添加会话(session)支持
+ * 添加会话(session)支持[cookie实现]
  * </pre>
  * 
  * @Author Xuyh created at 2016年9月30日 下午5:15:45
  */
-public class RequestSender {
+public class HttpRequestSender {
 	private final String end = "\r\n";
 	private final String twoHyphens = "--";
 	private final String boundary = "----------------------" + RandomUtils.getRandomString(18);
@@ -36,10 +36,10 @@ public class RequestSender {
 	 */
 	private Cookie cookie = null;
 
-	public RequestSender() {
+	public HttpRequestSender() {
 	}
 
-	public RequestSender(Cookie cookie) {
+	public HttpRequestSender(Cookie cookie) {
 		this.cookie = cookie;
 	}
 
@@ -83,7 +83,6 @@ public class RequestSender {
 			connection.setRequestMethod("POST");
 			connection.setRequestProperty("Connection", "Keep-Alive");
 			connection.setRequestProperty("Charset", "UTF-8");
-			;
 			connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
 			// 如果cookie不为空
 			if (this.cookie != null) {
@@ -345,7 +344,7 @@ public class RequestSender {
 			String fileName = uploadFile.substring(uploadFile.lastIndexOf(File.separator) + 1);
 			// 开始写表单格式内容
 			ds.writeBytes(twoHyphens + boundary + end);
-			ds.writeBytes("Content-Disposition: form-data; " + "name=\""+formFileName+"\"; " + "filename=\"");
+			ds.writeBytes("Content-Disposition: form-data; " + "name=\"" + formFileName + "\"; " + "filename=\"");
 			// 防止中文乱码
 			ds.write(fileName.getBytes());
 			ds.writeBytes("\"" + end);
@@ -403,7 +402,8 @@ public class RequestSender {
 	 * @param fileType 文件类型(枚举类型)
 	 * @return "" if no response get
 	 */
-	public String multipleFileUpload(String actionURL, String[] uploadFiles, String[] formFileNames, MIME_FileType fileType) {
+	public String multipleFileUpload(String actionURL, String[] uploadFiles, String[] formFileNames,
+			MIME_FileType fileType) {
 		String response = "";
 		try {
 			URL url = new URL(actionURL);
@@ -428,7 +428,7 @@ public class RequestSender {
 				String uploadFile = uploadFiles[i];
 				String fileName = uploadFile.substring(uploadFile.lastIndexOf(File.separator) + 1);
 				ds.writeBytes(twoHyphens + boundary + end);
-				ds.writeBytes("Content-Disposition: form-data; " + "name=\""+formFileNames[i]+"\"; " + "filename=\"");
+				ds.writeBytes("Content-Disposition: form-data; " + "name=\"" + formFileNames[i] + "\"; " + "filename=\"");
 				// 防止中文乱码
 				ds.write(fileName.getBytes());
 				ds.writeBytes("\"" + end);
@@ -488,7 +488,8 @@ public class RequestSender {
 	 * @param parameters 跟文件一起传输的参数(HashMap)
 	 * @return "" if no response get
 	 */
-	public String singleFileUploadWithParameters(String actionURL, String uploadFile, String formFileName, MIME_FileType fileType,
+	public String singleFileUploadWithParameters(String actionURL, String uploadFile, String formFileName,
+			MIME_FileType fileType,
 			HashMap<String, String> parameters) {
 		String response = "";
 		try {
@@ -524,7 +525,7 @@ public class RequestSender {
 			}
 			// 写文件
 			ds.writeBytes(twoHyphens + boundary + end);
-			ds.writeBytes("Content-Disposition: form-data; " + "name=\""+formFileName+"\"; " + "filename=\"");
+			ds.writeBytes("Content-Disposition: form-data; " + "name=\"" + formFileName + "\"; " + "filename=\"");
 			// 防止中文乱码
 			ds.write(fileName.getBytes());
 			ds.writeBytes("\"" + end);
@@ -584,7 +585,8 @@ public class RequestSender {
 	 * @param parameters 跟文件一起传输的参数(HashMap)
 	 * @return "" if no response get
 	 */
-	public String multipleFileUploadWithParameters(String actionURL, String[] uploadFiles, String[] formFileNames, MIME_FileType fileType,
+	public String multipleFileUploadWithParameters(String actionURL, String[] uploadFiles, String[] formFileNames,
+			MIME_FileType fileType,
 			HashMap<String, String> parameters) {
 		String response = "";
 		try {
@@ -622,7 +624,7 @@ public class RequestSender {
 				String uploadFile = uploadFiles[i];
 				String fileName = uploadFile.substring(uploadFile.lastIndexOf(File.separator) + 1);
 				ds.writeBytes(twoHyphens + boundary + end);
-				ds.writeBytes("Content-Disposition: form-data; " + "name=\""+formFileNames[i]+"\"; " + "filename=\"");
+				ds.writeBytes("Content-Disposition: form-data; " + "name=\"" + formFileNames[i] + "\"; " + "filename=\"");
 				// 防止中文乱码
 				ds.write(fileName.getBytes());
 				ds.writeBytes("\"" + end);

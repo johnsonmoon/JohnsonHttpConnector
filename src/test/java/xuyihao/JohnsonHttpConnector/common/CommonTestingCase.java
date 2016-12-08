@@ -9,9 +9,9 @@ import java.util.List;
 import java.util.Map;
 
 import xuyihao.JohnsonHttpConnector.common.utils.CommonUtils;
-import xuyihao.JohnsonHttpConnector.connectors.http.Downloader;
-import xuyihao.JohnsonHttpConnector.connectors.http.MultiThreadDownloader;
-import xuyihao.JohnsonHttpConnector.connectors.http.RequestSender;
+import xuyihao.JohnsonHttpConnector.connectors.http.HttpDownloader;
+import xuyihao.JohnsonHttpConnector.connectors.http.HttpMultiThreadDownloader;
+import xuyihao.JohnsonHttpConnector.connectors.http.HttpRequestSender;
 import xuyihao.JohnsonHttpConnector.enums.MIME_FileType;
 import xuyihao.JohnsonHttpConnector.utils.RandomUtils;
 
@@ -52,7 +52,7 @@ public class CommonTestingCase {
 	}
 
 	public static void testSendingRequestToRongYi() {
-		RequestSender sender = new RequestSender();
+		HttpRequestSender sender = new HttpRequestSender();
 		String actionURL = "http://127.0.0.1:8095/rongyi/accounts";
 		HashMap<String, String> parameters = new HashMap<String, String>();
 		parameters.put("action", "register");
@@ -87,7 +87,7 @@ public class CommonTestingCase {
 
 	public static void testUploadFile() {
 		String actionURL = "http://115.28.192.61:8088/rongyi/accounts";
-		RequestSender sender = new RequestSender();
+		HttpRequestSender sender = new HttpRequestSender();
 		CommonUtils.output(sender.executeGet(actionURL + "?action=register&Acc_name=" + RandomUtils.getRandomString(5)
 				+ "Acc_pwd=jjnma&Acc_sex=M&Acc_loc=kmn"));
 		CommonUtils.output("Input Acc_ID: ");
@@ -98,9 +98,9 @@ public class CommonTestingCase {
 
 	public static void testDownload() {
 		String actionURL = "http://115.28.192.61:8088/rongyi/courses";
-		RequestSender sender = new RequestSender();
+		HttpRequestSender sender = new HttpRequestSender();
 		CommonUtils.output(sender.executeGet(actionURL + "?action=getCachedCoursesList"));
-		Downloader downloader = new Downloader(sender.getCookie());
+		HttpDownloader downloader = new HttpDownloader(sender.getCookie());
 		CommonUtils.output("Input Vedio_ID: ");
 		String Vedio_ID = CommonUtils.input();
 		downloader.downloadByGet("C:\\Users\\Johnson\\Desktop\\kkmlml.mp4",
@@ -109,11 +109,11 @@ public class CommonTestingCase {
 
 	public static void testDownloadByMultiThread() {
 		String actionURL = "http://115.28.192.61:8088/rongyi/courses";
-		RequestSender sender = new RequestSender();
+		HttpRequestSender sender = new HttpRequestSender();
 		CommonUtils.output(sender.executeGet(actionURL + "?action=getCachedCoursesList"));
 		CommonUtils.output("Input Vedio_ID: ");
 		String Vedio_ID = CommonUtils.input();
-		MultiThreadDownloader downloader = new MultiThreadDownloader(
+		HttpMultiThreadDownloader downloader = new HttpMultiThreadDownloader(
 				actionURL + "?action=getVedioById&Vedio_ID=" + Vedio_ID, 5);
 		downloader.setCookie(sender.getCookie());
 		downloader.download("C:\\Users\\Johnson\\Desktop\\kkmadjioajfoial.mp4");

@@ -6,7 +6,7 @@ package xuyihao.JohnsonHttpConnector.enums;
  * @Author Xuyh created at 2016年9月30日 下午4:33:31
  */
 public enum MIME_FileType {
-	 
+
 	Application_bin("application/octet-stream"),
 	Application_class("application/octet-stream"),
 	Application_dir("application/x-director"),
@@ -111,13 +111,13 @@ public enum MIME_FileType {
 	Image_ifm("image/gif"),
 	Image_svg("image/svg+xml"),
 	Image_svf("image/vnd");
-	
+
 	private final String value;
-	
+
 	private MIME_FileType(String v){
 		this.value = v;
 	}
-	
+
 	public String getValue(){
 		return this.value;
 	}

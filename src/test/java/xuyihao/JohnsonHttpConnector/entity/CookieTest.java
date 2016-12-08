@@ -1,4 +1,4 @@
-package xuyihao.JohnsonHttpConnector.connectors.http.entity;
+package xuyihao.JohnsonHttpConnector.entity;
 
 import junit.framework.TestCase;
 

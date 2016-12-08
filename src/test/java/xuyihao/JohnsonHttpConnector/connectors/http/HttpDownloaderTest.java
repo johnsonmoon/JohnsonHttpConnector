@@ -6,10 +6,10 @@ import junit.framework.TestCase;
 import xuyihao.JohnsonHttpConnector.common.utils.CommonUtils;
 import xuyihao.JohnsonHttpConnector.enums.MIME_FileType;
 
-public class DownloaderTest extends TestCase {
+public class HttpDownloaderTest extends TestCase {
 	public static String actionURL1 = "http://115.28.192.61:8088/rongyi/accounts";
-	private RequestSender requestSender = new RequestSender();
-	private Downloader downloader = new Downloader();
+	private HttpRequestSender requestSender = new HttpRequestSender();
+	private HttpDownloader downloader = new HttpDownloader();
 
 	public void test() {
 		HashMap<String, String> parameters2 = new HashMap<String, String>();

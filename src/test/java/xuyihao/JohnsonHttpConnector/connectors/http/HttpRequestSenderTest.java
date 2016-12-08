@@ -7,8 +7,8 @@ import xuyihao.JohnsonHttpConnector.common.utils.CommonUtils;
 import xuyihao.JohnsonHttpConnector.enums.MIME_FileType;
 import xuyihao.JohnsonHttpConnector.utils.RandomUtils;
 
-public class RequestSenderTest extends TestCase {
-	RequestSender requestSender = new RequestSender();
+public class HttpRequestSenderTest extends TestCase {
+	HttpRequestSender requestSender = new HttpRequestSender();
 	String actionURL = "http://115.28.192.61:8088/rongyi/accounts";
 
 	public void test() {

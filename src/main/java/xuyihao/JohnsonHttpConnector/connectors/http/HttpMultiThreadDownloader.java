@@ -8,7 +8,7 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Set;
 
-import xuyihao.JohnsonHttpConnector.connectors.http.entity.Cookie;
+import xuyihao.JohnsonHttpConnector.entity.Cookie;
 
 /**
  * 网络资源(文件)多线程下载工具类
@@ -24,7 +24,7 @@ import xuyihao.JohnsonHttpConnector.connectors.http.entity.Cookie;
  * @author Xuyh at 2016年9月30日 下午7:10:27.
  *
  */
-public class MultiThreadDownloader {
+public class HttpMultiThreadDownloader {
 	/**
 	 * cookie的配置逻辑：
 	 * 每次请求发送时候都会在请求头带上cookie信息(如果cookie为null则不带上),
@@ -41,7 +41,7 @@ public class MultiThreadDownloader {
 	 * @param actionURL 需要下载资源的URL地址,不跟参数,或者直接将参数写在URL上面
 	 * @param threadNumber 需要启动的下载线程数量
 	 */
-	public MultiThreadDownloader(String actionURL, int threadNumber) {
+	public HttpMultiThreadDownloader(String actionURL, int threadNumber) {
 		this.trueRequestURL = actionURL;
 		this.threadNum = threadNumber;
 		this.threads = new DownloadThread[this.threadNum];
@@ -53,7 +53,7 @@ public class MultiThreadDownloader {
 	 * @param parameters URL后的具体参数，以key=value的形式传递
 	 * @param threadNumber 需要启动的下载线程数量
 	 */
-	public MultiThreadDownloader(String actionURL, HashMap<String, String> parameters, int threadNumber) {
+	public HttpMultiThreadDownloader(String actionURL, HashMap<String, String> parameters, int threadNumber) {
 		this.trueRequestURL = actionURL;
 		trueRequestURL += "?";
 		Set<String> keys = parameters.keySet();
@@ -72,8 +72,8 @@ public class MultiThreadDownloader {
 	 * @param threadNumber 需要启动的下载线程数量
 	 * @param cookie 保持会话信息的cookie
 	 */
-	public MultiThreadDownloader(String actionURL, HashMap<String, String> parameters, int threadNumber,
-			Cookie cookie) {
+	public HttpMultiThreadDownloader(String actionURL, HashMap<String, String> parameters, int threadNumber,
+									 Cookie cookie) {
 		this.trueRequestURL = actionURL;
 		trueRequestURL += "?";
 		Set<String> keys = parameters.keySet();
@@ -372,14 +372,14 @@ public class MultiThreadDownloader {
 	 *
 	 */
 	private class CheckThread extends Thread {
-		private MultiThreadDownloader down;
+		private HttpMultiThreadDownloader down;
 		private int showTime = 1000;
 
-		public CheckThread(MultiThreadDownloader d) {
+		public CheckThread(HttpMultiThreadDownloader d) {
 			this.down = d;
 		}
 
-		public CheckThread(MultiThreadDownloader d, int showTime) {
+		public CheckThread(HttpMultiThreadDownloader d, int showTime) {
 			this.down = d;
 			this.showTime = showTime * 1000;
 		}

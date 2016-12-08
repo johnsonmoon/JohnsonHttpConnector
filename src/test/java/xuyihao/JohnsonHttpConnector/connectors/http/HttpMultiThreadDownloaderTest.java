@@ -5,9 +5,9 @@ import java.util.HashMap;
 import junit.framework.TestCase;
 import xuyihao.JohnsonHttpConnector.common.utils.CommonUtils;
 
-public class MultiThreadDownloaderTest extends TestCase {
+public class HttpMultiThreadDownloaderTest extends TestCase {
 	public static String actionURL1 = "http://115.28.192.61:8088/rongyi/accounts";
-	private RequestSender requestSender = new RequestSender();
+	private HttpRequestSender requestSender = new HttpRequestSender();
 
 	public void testDownloadToPath() {
 		HashMap<String, String> parameters2 = new HashMap<String, String>();
@@ -26,7 +26,7 @@ public class MultiThreadDownloaderTest extends TestCase {
 		HashMap<String, String> parameters = new HashMap<String, String>();
 		parameters.put("action", "getPhotoById");
 		parameters.put("Photo_ID", Photo_ID);
-		MultiThreadDownloader downloader = new MultiThreadDownloader(actionURL1, parameters, 2, requestSender.getCookie());
+		HttpMultiThreadDownloader downloader = new HttpMultiThreadDownloader(actionURL1, parameters, 2, requestSender.getCookie());
 		downloader.download("C:\\Users\\Johnson\\Desktop\\download333.jpg");
 	}
 
