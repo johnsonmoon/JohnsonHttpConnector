@@ -24,8 +24,7 @@ import java.util.Set;
  */
 public class HttpsRequestSender {
 	/**
-	 * cookie的配置逻辑：
-	 * 每次请求发送时候都会在请求头带上cookie信息(如果cookie为null则不带上),
+	 * cookie的配置逻辑： 每次请求发送时候都会在请求头带上cookie信息(如果cookie为null则不带上),
 	 * 然后从响应头中获取新的cookie值刷新当前值,可以起到保存同服务器的会话的作用
 	 */
 	private Cookie cookie = null;
@@ -89,7 +88,7 @@ public class HttpsRequestSender {
 			// 使用write(requestContent.getBytes())是为了防止中文出现乱码
 			ds.write(requestContent.getBytes());
 			ds.flush();
-			//获取服务器响应头的cookie信息
+			// 获取服务器响应头的cookie信息
 			String set_cookie = connection.getHeaderField("Set-Cookie");
 			if (set_cookie != null && !set_cookie.equals("")) {
 				this.cookie = Cookie.newCookieInstance(set_cookie);
@@ -129,14 +128,11 @@ public class HttpsRequestSender {
 			if (this.cookie != null) {
 				connection.setRequestProperty("cookie", this.cookie.convertCookieToCookieValueString());
 			}
-			// 获取请求内容输出流
 			DataOutputStream ds = new DataOutputStream(connection.getOutputStream());
-			// 写参数数据
 			DataUtils.addPostCommonData(parameters, ds);
-			//写流结尾
 			DataUtils.addPostEndData(ds);
 			ds.flush();
-			//获取服务器响应头的cookie信息
+			// 获取服务器响应头的cookie信息
 			String set_cookie = connection.getHeaderField("Set-Cookie");
 			if (set_cookie != null && !set_cookie.equals("")) {
 				this.cookie = Cookie.newCookieInstance(set_cookie);
@@ -174,7 +170,7 @@ public class HttpsRequestSender {
 			if (this.cookie != null) {
 				connection.setRequestProperty("cookie", this.cookie.convertCookieToCookieValueString());
 			}
-			//获取服务器响应头的cookie信息
+			// 获取服务器响应头的cookie信息
 			String set_cookie = connection.getHeaderField("Set-Cookie");
 			if (set_cookie != null && !set_cookie.equals("")) {
 				this.cookie = Cookie.newCookieInstance(set_cookie);
@@ -217,7 +213,7 @@ public class HttpsRequestSender {
 			if (this.cookie != null) {
 				connection.setRequestProperty("cookie", this.cookie.convertCookieToCookieValueString());
 			}
-			//获取服务器响应头的cookie信息
+			// 获取服务器响应头的cookie信息
 			String set_cookie = connection.getHeaderField("Set-Cookie");
 			if (set_cookie != null && !set_cookie.equals("")) {
 				this.cookie = Cookie.newCookieInstance(set_cookie);
@@ -254,15 +250,12 @@ public class HttpsRequestSender {
 			if (this.cookie != null) {
 				connection.setRequestProperty("cookie", this.cookie.convertCookieToCookieValueString());
 			}
-			// 获取请求内容输出流
 			DataOutputStream ds = new DataOutputStream(connection.getOutputStream());
 			String fileName = uploadFile.substring(uploadFile.lastIndexOf(File.separator) + 1);
-			// 开始写表单格式内容
 			DataUtils.addPostSingleFileData(uploadFile, fileName, formFileName, fileType, ds);
-			//写流结尾
 			DataUtils.addPostEndData(ds);
 			ds.flush();
-			//获取服务器响应头的cookie信息
+			// 获取服务器响应头的cookie信息
 			String set_cookie = connection.getHeaderField("Set-Cookie");
 			if (set_cookie != null && !set_cookie.equals("")) {
 				this.cookie = Cookie.newCookieInstance(set_cookie);
@@ -279,6 +272,7 @@ public class HttpsRequestSender {
 	 * 模拟提交表单数据上传多个文件的方法
 	 *
 	 * <pre></pre>
+	 * 
 	 * 如果存在会话，本方法可以保持会话，如果要消除会话，请使用invalidateCookie方法
 	 * </pre>
 	 *
@@ -301,14 +295,11 @@ public class HttpsRequestSender {
 			if (this.cookie != null) {
 				connection.setRequestProperty("cookie", this.cookie.convertCookieToCookieValueString());
 			}
-			// 获取请求内容输出流
 			DataOutputStream ds = new DataOutputStream(connection.getOutputStream());
-			//添加数据
 			DataUtils.addPostMultiFileData(uploadFiles, formFileNames, ds, fileType);
-			//写流结尾
 			DataUtils.addPostEndData(ds);
 			ds.flush();
-			//获取服务器响应头的cookie信息
+			// 获取服务器响应头的cookie信息
 			String set_cookie = connection.getHeaderField("Set-Cookie");
 			if (set_cookie != null && !set_cookie.equals("")) {
 				this.cookie = Cookie.newCookieInstance(set_cookie);
@@ -337,8 +328,7 @@ public class HttpsRequestSender {
 	 * @return "" if no response get
 	 */
 	public String singleFileUploadWithParameters(String actionURL, String uploadFile, String formFileName,
-			MIME_FileType fileType,
-			HashMap<String, String> parameters) {
+			MIME_FileType fileType, HashMap<String, String> parameters) {
 		String response = "";
 		try {
 			URL url = new URL(actionURL);
@@ -350,18 +340,13 @@ public class HttpsRequestSender {
 			if (this.cookie != null) {
 				connection.setRequestProperty("cookie", this.cookie.convertCookieToCookieValueString());
 			}
-			// 获取请求内容输出流
 			DataOutputStream ds = new DataOutputStream(connection.getOutputStream());
 			String fileName = uploadFile.substring(uploadFile.lastIndexOf(File.separator) + 1);
-			// 开始写表单格式内容
-			// 写参数
 			DataUtils.addPostCommonData(parameters, ds);
-			// 写文件
 			DataUtils.addPostSingleFileData(uploadFile, fileName, formFileName, fileType, ds);
-			//写流结尾
 			DataUtils.addPostEndData(ds);
 			ds.flush();
-			//获取服务器响应头的cookie信息
+			// 获取服务器响应头的cookie信息
 			String set_cookie = connection.getHeaderField("Set-Cookie");
 			if (set_cookie != null && !set_cookie.equals("")) {
 				this.cookie = Cookie.newCookieInstance(set_cookie);
@@ -390,8 +375,7 @@ public class HttpsRequestSender {
 	 * @return "" if no response get
 	 */
 	public String multipleFileUploadWithParameters(String actionURL, String[] uploadFiles, String[] formFileNames,
-			MIME_FileType fileType,
-			HashMap<String, String> parameters) {
+			MIME_FileType fileType, HashMap<String, String> parameters) {
 		String response = "";
 		try {
 			URL url = new URL(actionURL);
@@ -403,17 +387,12 @@ public class HttpsRequestSender {
 			if (this.cookie != null) {
 				connection.setRequestProperty("cookie", this.cookie.convertCookieToCookieValueString());
 			}
-			// 获取请求内容输出流
 			DataOutputStream ds = new DataOutputStream(connection.getOutputStream());
-			// 开始写表单格式内容
-			// 写参数
 			DataUtils.addPostCommonData(parameters, ds);
-			// 写文件
 			DataUtils.addPostMultiFileData(uploadFiles, formFileNames, ds, fileType);
-			//写流结尾
 			DataUtils.addPostEndData(ds);
 			ds.flush();
-			//获取服务器响应头的cookie信息
+			// 获取服务器响应头的cookie信息
 			String set_cookie = connection.getHeaderField("Set-Cookie");
 			if (set_cookie != null && !set_cookie.equals("")) {
 				this.cookie = Cookie.newCookieInstance(set_cookie);

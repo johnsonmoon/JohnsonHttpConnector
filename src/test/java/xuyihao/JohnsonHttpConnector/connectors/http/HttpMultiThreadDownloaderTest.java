@@ -27,7 +27,7 @@ public class HttpMultiThreadDownloaderTest extends TestCase {
 		parameters.put("action", "getPhotoById");
 		parameters.put("Photo_ID", Photo_ID);
 		HttpMultiThreadDownloader downloader = new HttpMultiThreadDownloader(actionURL1, parameters, 2, requestSender.getCookie());
-		downloader.download("C:\\Users\\Johnson\\Desktop\\download333.jpg");
+		downloader.download("C:\\Users\\Administrator\\Desktop\\download333.jpg");
 	}
 
 }

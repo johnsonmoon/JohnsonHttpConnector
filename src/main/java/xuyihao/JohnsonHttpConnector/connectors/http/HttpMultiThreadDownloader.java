@@ -26,8 +26,7 @@ import xuyihao.JohnsonHttpConnector.entity.Cookie;
  */
 public class HttpMultiThreadDownloader {
 	/**
-	 * cookie的配置逻辑：
-	 * 每次请求发送时候都会在请求头带上cookie信息(如果cookie为null则不带上),
+	 * cookie的配置逻辑： 每次请求发送时候都会在请求头带上cookie信息(如果cookie为null则不带上),
 	 * 然后从响应头中获取新的cookie值刷新当前值,可以起到保存同服务器的会话的作用
 	 */
 	private Cookie cookie = null;
@@ -73,7 +72,7 @@ public class HttpMultiThreadDownloader {
 	 * @param cookie 保持会话信息的cookie
 	 */
 	public HttpMultiThreadDownloader(String actionURL, HashMap<String, String> parameters, int threadNumber,
-									 Cookie cookie) {
+			Cookie cookie) {
 		this.trueRequestURL = actionURL;
 		trueRequestURL += "?";
 		Set<String> keys = parameters.keySet();
@@ -108,7 +107,7 @@ public class HttpMultiThreadDownloader {
 	 * </pre>
 	 * 
 	 * @param targetFilePathName 文件的目标保存完整路径文件名称
-	 * @return 
+	 * @return
 	 */
 	public boolean download(String targetFilePathName) {
 		boolean flag = false;
@@ -122,21 +121,21 @@ public class HttpMultiThreadDownloader {
 				connection.setRequestProperty("cookie", this.cookie.convertCookieToCookieValueString());
 			}
 			connection.setRequestProperty("Accept",
-					"image/gif, image/jpeg, image/pjpeg, image/pjpeg, "
-							+ "application/x-shockwave-flash, application/xaml+xml, "
+					"image/gif, image/jpeg, image/pjpeg, image/pjpeg, " + "application/x-shockwave-flash, application/xaml+xml, "
 							+ "application/vnd.ms-xpsdocument, application/x-ms-xbap, "
 							+ "application/x-ms-application, application/vnd.ms-excel, "
 							+ "application/vnd.ms-powerpoint, application/msword, */*");
 			connection.setRequestProperty("Accept-Language", "zh-CN");
 			connection.setRequestProperty("Charset", "UTF-8");
 			connection.setRequestProperty("Connection", "Keep-Alive");
-			//获取服务器响应头的cookie信息
+			// 获取服务器响应头的cookie信息
 			String set_cookie = connection.getHeaderField("Set-Cookie");
 			if (set_cookie != null && !set_cookie.equals("")) {
 				this.cookie = Cookie.newCookieInstance(set_cookie);
 			}
-			//check whether wen can get the exact length by the server, if not, stop the program
-			//检查能否获取到准确的文件长度，如果不能则结束程序并报错
+			// check whether wen can get the exact length by the server, if not, stop
+			// the program
+			// 检查能否获取到准确的文件长度，如果不能则结束程序并报错
 			if (connection.getContentLength() == -1) {
 				flag = false;
 			} else {
@@ -144,17 +143,17 @@ public class HttpMultiThreadDownloader {
 				connection.disconnect();
 				long currentPartSize = this.fileSize / this.threadNum + 1;
 				RandomAccessFile file = new RandomAccessFile(targetFilePathName, "rw");
-				//set the file size of the local file which would be written
+				// set the file size of the local file which would be written
 				file.setLength(this.fileSize);
 				file.close();
 				for (int i = 0; i < this.threadNum; i++) {
-					//calculate the start position for each thread
+					// calculate the start position for each thread
 					long startPosition = i * currentPartSize;
-					//each thread use one RandomAccessFile to download
+					// each thread use one RandomAccessFile to download
 					RandomAccessFile currentFilePart = new RandomAccessFile(targetFilePathName, "rw");
-					//locate the download position for the thread
+					// locate the download position for the thread
 					currentFilePart.seek(startPosition);
-					//create thread
+					// create thread
 					if (this.cookie == null) {
 						threads[i] = new DownloadThread(startPosition, currentPartSize, currentFilePart);
 					} else {
@@ -180,7 +179,8 @@ public class HttpMultiThreadDownloader {
 	 * </pre>
 	 * 
 	 * @param targetPath 文件存放路径,文件名将从服务器响应中获取
-	 * @return boolean true if successfully, false if failed 如果成功,返回true并开始下载,如果失败返回false
+	 * @return boolean true if successfully, false if failed
+	 *         如果成功,返回true并开始下载,如果失败返回false
 	 */
 	public boolean downloadToPath(String targetPath) {
 		boolean flag = false;
@@ -194,25 +194,25 @@ public class HttpMultiThreadDownloader {
 				connection.setRequestProperty("cookie", this.cookie.convertCookieToCookieValueString());
 			}
 			connection.setRequestProperty("Accept",
-					"image/gif, image/jpeg, image/pjpeg, image/pjpeg, "
-							+ "application/x-shockwave-flash, application/xaml+xml, "
+					"image/gif, image/jpeg, image/pjpeg, image/pjpeg, " + "application/x-shockwave-flash, application/xaml+xml, "
 							+ "application/vnd.ms-xpsdocument, application/x-ms-xbap, "
 							+ "application/x-ms-application, application/vnd.ms-excel, "
 							+ "application/vnd.ms-powerpoint, application/msword, */*");
 			connection.setRequestProperty("Accept-Language", "zh-CN");
 			connection.setRequestProperty("Charset", "UTF-8");
 			connection.setRequestProperty("Connection", "Keep-Alive");
-			//获取服务器响应头的cookie信息
+			// 获取服务器响应头的cookie信息
 			String set_cookie = connection.getHeaderField("Set-Cookie");
 			if (set_cookie != null && !set_cookie.equals("")) {
 				this.cookie = Cookie.newCookieInstance(set_cookie);
 			}
-			//check whether wen can get the exact length by the server, if not, stop the program
-			//检查能否获取到准确的文件长度，如果不能则结束程序并报错
+			// check whether wen can get the exact length by the server, if not, stop
+			// the program
+			// 检查能否获取到准确的文件长度，如果不能则结束程序并报错
 			if (connection.getContentLength() == -1) {
 				flag = false;
 			} else {
-				//检查是否获取文件名,如果没有获取返回false
+				// 检查是否获取文件名,如果没有获取返回false
 				String ContentDisposition = connection.getHeaderField("Content-Disposition");
 				if (ContentDisposition == null) {
 					System.out.println("No file name get from the response header!");
@@ -224,17 +224,17 @@ public class HttpMultiThreadDownloader {
 					connection.disconnect();
 					long currentPartSize = this.fileSize / this.threadNum + 1;
 					RandomAccessFile file = new RandomAccessFile(targetPath + fileName, "rw");
-					//set the file size of the local file which would be written
+					// set the file size of the local file which would be written
 					file.setLength(this.fileSize);
 					file.close();
 					for (int i = 0; i < this.threadNum; i++) {
-						//calculate the start position for each thread
+						// calculate the start position for each thread
 						long startPosition = i * currentPartSize;
-						//each thread use one RandomAccessFile to download
+						// each thread use one RandomAccessFile to download
 						RandomAccessFile currentFilePart = new RandomAccessFile(targetPath + fileName, "rw");
-						//locate the download position for the thread
+						// locate the download position for the thread
 						currentFilePart.seek(startPosition);
-						//create thread
+						// create thread
 						if (this.cookie == null) {
 							threads[i] = new DownloadThread(startPosition, currentPartSize, currentFilePart);
 						} else {

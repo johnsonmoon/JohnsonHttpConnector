@@ -41,7 +41,7 @@ public class HttpRequestSenderTest extends TestCase {
 		parameters4.put("action", "addHeadPhoto");
 		parameters4.put("Acc_ID", Acc_ID);
 		CommonUtils.output(requestSender.singleFileUploadWithParameters(actionURL,
-				"C:\\Users\\Johnson\\Desktop\\minion.jpeg", "file", MIME_FileType.Image_jpeg, parameters4));
+				"C:\\Users\\Administrator\\Desktop\\minion.jpg", "file", MIME_FileType.Image_jpg, parameters4));
 
 	}
 }

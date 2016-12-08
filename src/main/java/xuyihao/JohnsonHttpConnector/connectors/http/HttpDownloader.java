@@ -10,6 +10,7 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Set;
 
+import xuyihao.JohnsonHttpConnector.connectors.util.DataUtils;
 import xuyihao.JohnsonHttpConnector.entity.Cookie;
 
 /**
@@ -72,7 +73,7 @@ public class HttpDownloader {
 	 * 使cookie无效，即删除会话信息
 	 */
 	public void invalidateCookie() {
-		this.cookie = null;
+		cookie = null;
 	}
 
 	/**
@@ -87,11 +88,11 @@ public class HttpDownloader {
 	 * @return byte[] 返回一个储存文件内容的字节数组
 	 */
 	public byte[] downloadByGet(String actionURL) {
-		this.fileTotalLength = 0L;
-		this.fileReceiveLength = 0L;
-		this.ableToCaculate = false;
-		this.downloadComplete = false;
-		this.ifDownloadFailed = false;
+		fileTotalLength = 0L;
+		fileReceiveLength = 0L;
+		ableToCaculate = false;
+		downloadComplete = false;
+		ifDownloadFailed = false;
 		byte[] data = new byte[0];
 		try {
 			String trueRequestURL = actionURL;
@@ -99,42 +100,29 @@ public class HttpDownloader {
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 			connection.setRequestMethod("GET");
 			// 如果cookie不为空
-			if (this.cookie != null) {
-				connection.setRequestProperty("cookie", this.cookie.convertCookieToCookieValueString());
+			if (cookie != null) {
+				connection.setRequestProperty("cookie", cookie.convertCookieToCookieValueString());
 			}
 			// get the length of the file, if get, set ableToCaculate true
 			long getLength = connection.getContentLength();
 			if (getLength == -1) {
-				this.ableToCaculate = false;
-				this.fileTotalLength = 0L;
+				ableToCaculate = false;
+				fileTotalLength = 0L;
 			} else {
-				this.ableToCaculate = true;
-				this.fileTotalLength = getLength;
+				ableToCaculate = true;
+				fileTotalLength = getLength;
 			}
 			//获取服务器响应头的cookie信息
 			String set_cookie = connection.getHeaderField("Set-Cookie");
 			if (set_cookie != null && !set_cookie.equals("")) {
-				this.cookie = Cookie.newCookieInstance(set_cookie);
+				cookie = Cookie.newCookieInstance(set_cookie);
 			}
-			try {
-				// 获取URL的响应
-				InputStream in = connection.getInputStream();
-				byte[] b = new byte[1];
-				while (in.read(b) != -1) {
-					data = this.connectTwoByteArrays(data, b);
-					// receive 1 byte content
-					this.fileReceiveLength = this.fileReceiveLength + 1;
-				}
-				in.close();
-				this.downloadComplete = true;
-			} catch (IOException e) {
-				e.printStackTrace();
-				this.ifDownloadFailed = true;
-				System.out.println("No response get!!!");
-			}
+			// 获取URL的响应
+			InputStream in = connection.getInputStream();
+			getResponseStreamToByteArray(in, data);
 		} catch (IOException e) {
 			e.printStackTrace();
-			this.ifDownloadFailed = true;
+			ifDownloadFailed = true;
 			System.out.println("Request failed!");
 		}
 		return data;
@@ -153,11 +141,11 @@ public class HttpDownloader {
 	 * @return byte[] 返回一个储存文件内容的字节数组
 	 */
 	public byte[] downloadByGet(String actionURL, HashMap<String, String> parameters) {
-		this.fileTotalLength = 0L;
-		this.fileReceiveLength = 0L;
-		this.ableToCaculate = false;
-		this.downloadComplete = false;
-		this.ifDownloadFailed = false;
+		fileTotalLength = 0L;
+		fileReceiveLength = 0L;
+		ableToCaculate = false;
+		downloadComplete = false;
+		ifDownloadFailed = false;
 		byte[] data = new byte[0];
 		try {
 			String trueRequestURL = actionURL;
@@ -171,42 +159,28 @@ public class HttpDownloader {
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 			connection.setRequestMethod("GET");
 			// 如果cookie不为空
-			if (this.cookie != null) {
-				connection.setRequestProperty("cookie", this.cookie.convertCookieToCookieValueString());
+			if (cookie != null) {
+				connection.setRequestProperty("cookie", cookie.convertCookieToCookieValueString());
 			}
 			// get the length of the file, if get, set ableToCaculate true
 			long getLength = connection.getContentLength();
 			if (getLength == -1) {
-				this.ableToCaculate = false;
-				this.fileTotalLength = 0L;
+				ableToCaculate = false;
+				fileTotalLength = 0L;
 			} else {
-				this.ableToCaculate = true;
-				this.fileTotalLength = getLength;
+				ableToCaculate = true;
+				fileTotalLength = getLength;
 			}
 			//获取服务器响应头的cookie信息
 			String set_cookie = connection.getHeaderField("Set-Cookie");
 			if (set_cookie != null && !set_cookie.equals("")) {
-				this.cookie = Cookie.newCookieInstance(set_cookie);
+				cookie = Cookie.newCookieInstance(set_cookie);
 			}
-			try {
-				// 获取URL的响应
-				InputStream in = connection.getInputStream();
-				byte[] b = new byte[1];
-				while (in.read(b) != -1) {
-					data = this.connectTwoByteArrays(data, b);
-					// receive 1 byte content
-					this.fileReceiveLength = this.fileReceiveLength + 1;
-				}
-				in.close();
-				this.downloadComplete = true;
-			} catch (IOException e) {
-				e.printStackTrace();
-				this.ifDownloadFailed = true;
-				System.out.println("No response get!!!");
-			}
+			InputStream in = connection.getInputStream();
+			getResponseStreamToByteArray(in, data);
 		} catch (IOException e) {
 			e.printStackTrace();
-			this.ifDownloadFailed = true;
+			ifDownloadFailed = true;
 			System.out.println("Request failed!");
 		}
 		return data;
@@ -226,11 +200,11 @@ public class HttpDownloader {
 	 * @return 返回true如果接收文件成功
 	 */
 	public boolean downloadByGet(String savePathName, String actionURL) {
-		this.fileTotalLength = 0L;
-		this.fileReceiveLength = 0L;
-		this.ableToCaculate = false;
-		this.downloadComplete = false;
-		this.ifDownloadFailed = false;
+		fileTotalLength = 0L;
+		fileReceiveLength = 0L;
+		ableToCaculate = false;
+		downloadComplete = false;
+		ifDownloadFailed = false;
 		boolean flag = false;
 		try {
 			String trueRequestURL = actionURL;
@@ -238,49 +212,30 @@ public class HttpDownloader {
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 			connection.setRequestMethod("GET");
 			// 如果cookie不为空
-			if (this.cookie != null) {
-				connection.setRequestProperty("cookie", this.cookie.convertCookieToCookieValueString());
+			if (cookie != null) {
+				connection.setRequestProperty("cookie", cookie.convertCookieToCookieValueString());
 			}
 			// get the length of the file, if get, set ableToCaculate true
 			long getLength = connection.getContentLength();
 			if (getLength == -1) {
-				this.ableToCaculate = false;
-				this.fileTotalLength = 0L;
+				ableToCaculate = false;
+				fileTotalLength = 0L;
 			} else {
-				this.ableToCaculate = true;
-				this.fileTotalLength = getLength;
+				ableToCaculate = true;
+				fileTotalLength = getLength;
 			}
 			//获取服务器响应头的cookie信息
 			String set_cookie = connection.getHeaderField("Set-Cookie");
 			if (set_cookie != null && !set_cookie.equals("")) {
-				this.cookie = Cookie.newCookieInstance(set_cookie);
+				cookie = Cookie.newCookieInstance(set_cookie);
 			}
-			try {
-				// 获取URL的响应
-				InputStream in = connection.getInputStream();
-				File file = new File(savePathName);
-				FileOutputStream out = new FileOutputStream(file);
-				byte[] b = new byte[1024];
-				int length = 0;
-				while ((length = in.read(b)) != -1) {
-					out.write(b, 0, length);
-					// received length bytes
-					this.fileReceiveLength = this.fileReceiveLength + length;
-				}
-				in.close();
-				out.close();
-				flag = true;
-				this.downloadComplete = true;
-			} catch (IOException e) {
-				e.printStackTrace();
-				flag = false;
-				this.ifDownloadFailed = true;
-				System.out.println("No response get!!!");
-			}
+			// 获取URL的响应
+			InputStream in = connection.getInputStream();
+			flag = getResponseStreamToDiskFile(savePathName, in);
 		} catch (IOException e) {
 			e.printStackTrace();
 			flag = false;
-			this.ifDownloadFailed = true;
+			ifDownloadFailed = true;
 			System.out.println("Request failed!");
 		}
 		return flag;
@@ -302,11 +257,11 @@ public class HttpDownloader {
 	 * @return 返回true如果接收文件成功
 	 */
 	public boolean downloadByGet(String savePathName, String actionURL, HashMap<String, String> parameters) {
-		this.fileTotalLength = 0L;
-		this.fileReceiveLength = 0L;
-		this.ableToCaculate = false;
-		this.downloadComplete = false;
-		this.ifDownloadFailed = false;
+		fileTotalLength = 0L;
+		fileReceiveLength = 0L;
+		ableToCaculate = false;
+		downloadComplete = false;
+		ifDownloadFailed = false;
 		boolean flag = false;
 		try {
 			String trueRequestURL = actionURL;
@@ -320,49 +275,30 @@ public class HttpDownloader {
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 			connection.setRequestMethod("GET");
 			// 如果cookie不为空
-			if (this.cookie != null) {
-				connection.setRequestProperty("cookie", this.cookie.convertCookieToCookieValueString());
+			if (cookie != null) {
+				connection.setRequestProperty("cookie", cookie.convertCookieToCookieValueString());
 			}
 			// get the length of the file, if get, set ableToCaculate true
 			long getLength = connection.getContentLength();
 			if (getLength == -1) {
-				this.ableToCaculate = false;
-				this.fileTotalLength = 0L;
+				ableToCaculate = false;
+				fileTotalLength = 0L;
 			} else {
-				this.ableToCaculate = true;
-				this.fileTotalLength = getLength;
+				ableToCaculate = true;
+				fileTotalLength = getLength;
 			}
 			//获取服务器响应头的cookie信息
 			String set_cookie = connection.getHeaderField("Set-Cookie");
 			if (set_cookie != null && !set_cookie.equals("")) {
-				this.cookie = Cookie.newCookieInstance(set_cookie);
+				cookie = Cookie.newCookieInstance(set_cookie);
 			}
-			try {
-				// 获取URL的响应
-				InputStream in = connection.getInputStream();
-				File file = new File(savePathName);
-				FileOutputStream out = new FileOutputStream(file);
-				byte[] b = new byte[1024];
-				int length = 0;
-				while ((length = in.read(b)) != -1) {
-					out.write(b, 0, length);
-					// received length bytes
-					this.fileReceiveLength = this.fileReceiveLength + length;
-				}
-				in.close();
-				out.close();
-				flag = true;
-				this.downloadComplete = true;
-			} catch (IOException e) {
-				e.printStackTrace();
-				flag = false;
-				this.ifDownloadFailed = true;
-				System.out.println("No response get!!!");
-			}
+			// 获取URL的响应
+			InputStream in = connection.getInputStream();
+			flag = getResponseStreamToDiskFile(savePathName, in);
 		} catch (IOException e) {
 			e.printStackTrace();
 			flag = false;
-			this.ifDownloadFailed = true;
+			ifDownloadFailed = true;
 			System.out.println("Request failed!");
 		}
 		return flag;
@@ -383,11 +319,11 @@ public class HttpDownloader {
 	 * @return 返回true如果接收文件成功
 	 */
 	public boolean downloadByGetSaveToPath(String savePath, String actionURL) {
-		this.fileTotalLength = 0L;
-		this.fileReceiveLength = 0L;
-		this.ableToCaculate = false;
-		this.downloadComplete = false;
-		this.ifDownloadFailed = false;
+		fileTotalLength = 0L;
+		fileReceiveLength = 0L;
+		ableToCaculate = false;
+		downloadComplete = false;
+		ifDownloadFailed = false;
 		boolean flag = false;
 		try {
 			String trueRequestURL = actionURL;
@@ -395,57 +331,31 @@ public class HttpDownloader {
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 			connection.setRequestMethod("GET");
 			// 如果cookie不为空
-			if (this.cookie != null) {
-				connection.setRequestProperty("cookie", this.cookie.convertCookieToCookieValueString());
+			if (cookie != null) {
+				connection.setRequestProperty("cookie", cookie.convertCookieToCookieValueString());
 			}
 			// get the length of the file, if get, set ableToCaculate true
 			long getLength = connection.getContentLength();
 			if (getLength == -1) {
-				this.ableToCaculate = false;
-				this.fileTotalLength = 0L;
+				ableToCaculate = false;
+				fileTotalLength = 0L;
 			} else {
-				this.ableToCaculate = true;
-				this.fileTotalLength = getLength;
+				ableToCaculate = true;
+				fileTotalLength = getLength;
 			}
 			//获取服务器响应头的cookie信息
 			String set_cookie = connection.getHeaderField("Set-Cookie");
 			if (set_cookie != null && !set_cookie.equals("")) {
-				this.cookie = Cookie.newCookieInstance(set_cookie);
+				cookie = Cookie.newCookieInstance(set_cookie);
 			}
-			String ContentDisposition = connection.getHeaderField("Content-Disposition");
-			if (ContentDisposition == null) {
-				System.out.println("No file name get from the response header!");
-				flag = false;
-			} else {
-				String fileName = ContentDisposition.substring(ContentDisposition.lastIndexOf("filename=\"") + 10);
-				fileName = fileName.substring(0, fileName.indexOf("\""));
-				try {
-					// 获取URL的响应
-					InputStream in = connection.getInputStream();
-					File file = new File(savePath + fileName);
-					FileOutputStream out = new FileOutputStream(file);
-					byte[] b = new byte[1024];
-					int length = 0;
-					while ((length = in.read(b)) != -1) {
-						out.write(b, 0, length);
-						// received length bytes
-						this.fileReceiveLength = this.fileReceiveLength + length;
-					}
-					in.close();
-					out.close();
-					flag = true;
-					this.downloadComplete = true;
-				} catch (IOException e) {
-					e.printStackTrace();
-					flag = false;
-					this.ifDownloadFailed = true;
-					System.out.println("No response get!!!");
-				}
-			}
+			// 获取URL的响应
+			String contentDisposition = connection.getHeaderField("Content-Disposition");
+			InputStream in = connection.getInputStream();
+			flag = getResponseStreamToDiskFileWithItsName(contentDisposition, in, savePath);
 		} catch (IOException e) {
 			e.printStackTrace();
 			flag = false;
-			this.ifDownloadFailed = true;
+			ifDownloadFailed = true;
 			System.out.println("Request failed!");
 		}
 		return flag;
@@ -467,11 +377,11 @@ public class HttpDownloader {
 	 * @return 返回true如果接收文件成功
 	 */
 	public boolean downloadByGetSaveToPath(String savePath, String actionURL, HashMap<String, String> parameters) {
-		this.fileTotalLength = 0L;
-		this.fileReceiveLength = 0L;
-		this.ableToCaculate = false;
-		this.downloadComplete = false;
-		this.ifDownloadFailed = false;
+		fileTotalLength = 0L;
+		fileReceiveLength = 0L;
+		ableToCaculate = false;
+		downloadComplete = false;
+		ifDownloadFailed = false;
 		boolean flag = false;
 		try {
 			String trueRequestURL = actionURL;
@@ -485,57 +395,31 @@ public class HttpDownloader {
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 			connection.setRequestMethod("GET");
 			// 如果cookie不为空
-			if (this.cookie != null) {
-				connection.setRequestProperty("cookie", this.cookie.convertCookieToCookieValueString());
+			if (cookie != null) {
+				connection.setRequestProperty("cookie", cookie.convertCookieToCookieValueString());
 			}
 			// get the length of the file, if get, set ableToCaculate true
 			long getLength = connection.getContentLength();
 			if (getLength == -1) {
-				this.ableToCaculate = false;
-				this.fileTotalLength = 0L;
+				ableToCaculate = false;
+				fileTotalLength = 0L;
 			} else {
-				this.ableToCaculate = true;
-				this.fileTotalLength = getLength;
+				ableToCaculate = true;
+				fileTotalLength = getLength;
 			}
 			//获取服务器响应头的cookie信息
 			String set_cookie = connection.getHeaderField("Set-Cookie");
 			if (set_cookie != null && !set_cookie.equals("")) {
-				this.cookie = Cookie.newCookieInstance(set_cookie);
+				cookie = Cookie.newCookieInstance(set_cookie);
 			}
-			String ContentDisposition = connection.getHeaderField("Content-Disposition");
-			if (ContentDisposition == null) {
-				System.out.println("No file name get from the response header!");
-				flag = false;
-			} else {
-				String fileName = ContentDisposition.substring(ContentDisposition.lastIndexOf("filename=\"") + 10);
-				fileName = fileName.substring(0, fileName.indexOf("\""));
-				try {
-					// 获取URL的响应
-					InputStream in = connection.getInputStream();
-					File file = new File(savePath + fileName);
-					FileOutputStream out = new FileOutputStream(file);
-					byte[] b = new byte[1024];
-					int length = 0;
-					while ((length = in.read(b)) != -1) {
-						out.write(b, 0, length);
-						// received length bytes
-						this.fileReceiveLength = this.fileReceiveLength + length;
-					}
-					in.close();
-					out.close();
-					flag = true;
-					this.downloadComplete = true;
-				} catch (IOException e) {
-					e.printStackTrace();
-					flag = false;
-					this.ifDownloadFailed = true;
-					System.out.println("No response get!!!");
-				}
-			}
+			// 获取URL的响应
+			String contentDisposition = connection.getHeaderField("Content-Disposition");
+			InputStream in = connection.getInputStream();
+			flag = getResponseStreamToDiskFileWithItsName(contentDisposition, in, savePath);
 		} catch (IOException e) {
 			e.printStackTrace();
 			flag = false;
-			this.ifDownloadFailed = true;
+			ifDownloadFailed = true;
 			System.out.println("Request failed!");
 		}
 		return flag;
@@ -554,26 +438,19 @@ public class HttpDownloader {
 	 * @return byte[] 返回一个储存文件内容的字节数组
 	 */
 	public byte[] downloadByPost(String actionURL, HashMap<String, String> parameters) {
-		this.fileTotalLength = 0L;
-		this.fileReceiveLength = 0L;
-		this.ableToCaculate = false;
-		this.downloadComplete = false;
-		this.ifDownloadFailed = false;
+		fileTotalLength = 0L;
+		fileReceiveLength = 0L;
+		ableToCaculate = false;
+		downloadComplete = false;
+		ifDownloadFailed = false;
 		byte[] data = new byte[0];
 		try {
 			URL url = new URL(actionURL);
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-			connection.setDoInput(true);
-			connection.setDoOutput(true);
-			connection.setUseCaches(false);
-			connection.setRequestMethod("POST");
-			connection.setRequestProperty("Connection", "Keep-Alive");
-			connection.setRequestProperty("Charset", "UTF-8");
-			;
-			connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+			DataUtils.setPostConnectionPropertiesByURLEncoded(connection);
 			// 如果cookie不为空
-			if (this.cookie != null) {
-				connection.setRequestProperty("cookie", this.cookie.convertCookieToCookieValueString());
+			if (cookie != null) {
+				connection.setRequestProperty("cookie", cookie.convertCookieToCookieValueString());
 			}
 			// 设置请求数据内容
 			String requestContent = "";
@@ -589,38 +466,23 @@ public class HttpDownloader {
 			// get the length of the file, if get, set ableToCaculate true
 			long getLength = connection.getContentLength();
 			if (getLength == -1) {
-				this.ableToCaculate = false;
-				this.fileTotalLength = 0L;
+				ableToCaculate = false;
+				fileTotalLength = 0L;
 			} else {
-				this.ableToCaculate = true;
-				this.fileTotalLength = getLength;
+				ableToCaculate = true;
+				fileTotalLength = getLength;
 			}
 			//获取服务器响应头的cookie信息
 			String set_cookie = connection.getHeaderField("Set-Cookie");
 			if (set_cookie != null && !set_cookie.equals("")) {
-				this.cookie = Cookie.newCookieInstance(set_cookie);
+				cookie = Cookie.newCookieInstance(set_cookie);
 			}
-			try {
-				// 获取URL的响应
-				// 获取URL的响应
-				InputStream in = connection.getInputStream();
-				byte[] b = new byte[1];
-				while (in.read(b) != -1) {
-					data = this.connectTwoByteArrays(data, b);
-					// receive 1 byte content
-					this.fileReceiveLength = this.fileReceiveLength + 1;
-				}
-				in.close();
-				this.downloadComplete = true;
-			} catch (IOException e) {
-				e.printStackTrace();
-				this.ifDownloadFailed = true;
-				System.out.println("No response get!!!");
-			}
+			InputStream in = connection.getInputStream();
+			getResponseStreamToByteArray(in, data);
 			ds.close();
 		} catch (IOException e) {
 			e.printStackTrace();
-			this.ifDownloadFailed = true;
+			ifDownloadFailed = true;
 			System.out.println("Request failed!");
 		}
 		return data;
@@ -641,26 +503,19 @@ public class HttpDownloader {
 	 * @return 返回true如果接收文件成功
 	 */
 	public boolean downloadByPost(String savePathName, String actionURL, HashMap<String, String> parameters) {
-		this.fileTotalLength = 0L;
-		this.fileReceiveLength = 0L;
-		this.ableToCaculate = false;
-		this.downloadComplete = false;
-		this.ifDownloadFailed = false;
+		fileTotalLength = 0L;
+		fileReceiveLength = 0L;
+		ableToCaculate = false;
+		downloadComplete = false;
+		ifDownloadFailed = false;
 		boolean flag = false;
 		try {
 			URL url = new URL(actionURL);
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-			connection.setDoInput(true);
-			connection.setDoOutput(true);
-			connection.setUseCaches(false);
-			connection.setRequestMethod("POST");
-			connection.setRequestProperty("Connection", "Keep-Alive");
-			connection.setRequestProperty("Charset", "UTF-8");
-			;
-			connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+			DataUtils.setPostConnectionPropertiesByURLEncoded(connection);
 			// 如果cookie不为空
-			if (this.cookie != null) {
-				connection.setRequestProperty("cookie", this.cookie.convertCookieToCookieValueString());
+			if (cookie != null) {
+				connection.setRequestProperty("cookie", cookie.convertCookieToCookieValueString());
 			}
 			// 设置请求数据内容
 			String requestContent = "";
@@ -676,44 +531,24 @@ public class HttpDownloader {
 			// get the length of the file, if get, set ableToCaculate true
 			long getLength = connection.getContentLength();
 			if (getLength == -1) {
-				this.ableToCaculate = false;
-				this.fileTotalLength = 0L;
+				ableToCaculate = false;
+				fileTotalLength = 0L;
 			} else {
-				this.ableToCaculate = true;
-				this.fileTotalLength = getLength;
+				ableToCaculate = true;
+				fileTotalLength = getLength;
 			}
 			//获取服务器响应头的cookie信息
 			String set_cookie = connection.getHeaderField("Set-Cookie");
 			if (set_cookie != null && !set_cookie.equals("")) {
-				this.cookie = Cookie.newCookieInstance(set_cookie);
+				cookie = Cookie.newCookieInstance(set_cookie);
 			}
-			try {
-				// 获取URL的响应
-				InputStream in = connection.getInputStream();
-				File file = new File(savePathName);
-				FileOutputStream out = new FileOutputStream(file);
-				byte[] b = new byte[1024];
-				int length = 0;
-				while ((length = in.read(b)) != -1) {
-					out.write(b, 0, length);
-					// received length bytes
-					this.fileReceiveLength = this.fileReceiveLength + length;
-				}
-				in.close();
-				out.close();
-				flag = true;
-				this.downloadComplete = true;
-			} catch (IOException e) {
-				e.printStackTrace();
-				flag = false;
-				this.ifDownloadFailed = true;
-				System.out.println("No response get!!!");
-			}
+			InputStream in = connection.getInputStream();
+			flag = getResponseStreamToDiskFile(savePathName, in);
 			ds.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 			flag = false;
-			this.ifDownloadFailed = true;
+			ifDownloadFailed = true;
 			System.out.println("Request failed!");
 		}
 		return flag;
@@ -735,26 +570,19 @@ public class HttpDownloader {
 	 * @return 返回true如果接收文件成功
 	 */
 	public boolean downloadByPostSaveToPath(String savePath, String actionURL, HashMap<String, String> parameters) {
-		this.fileTotalLength = 0L;
-		this.fileReceiveLength = 0L;
-		this.ableToCaculate = false;
-		this.downloadComplete = false;
-		this.ifDownloadFailed = false;
+		fileTotalLength = 0L;
+		fileReceiveLength = 0L;
+		ableToCaculate = false;
+		downloadComplete = false;
+		ifDownloadFailed = false;
 		boolean flag = false;
 		try {
 			URL url = new URL(actionURL);
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-			connection.setDoInput(true);
-			connection.setDoOutput(true);
-			connection.setUseCaches(false);
-			connection.setRequestMethod("POST");
-			connection.setRequestProperty("Connection", "Keep-Alive");
-			connection.setRequestProperty("Charset", "UTF-8");
-			;
-			connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+			DataUtils.setPostConnectionPropertiesByURLEncoded(connection);
 			// 如果cookie不为空
-			if (this.cookie != null) {
-				connection.setRequestProperty("cookie", this.cookie.convertCookieToCookieValueString());
+			if (cookie != null) {
+				connection.setRequestProperty("cookie", cookie.convertCookieToCookieValueString());
 			}
 			// 设置请求数据内容
 			String requestContent = "";
@@ -770,52 +598,25 @@ public class HttpDownloader {
 			// get the length of the file, if get, set ableToCaculate true
 			long getLength = connection.getContentLength();
 			if (getLength == -1) {
-				this.ableToCaculate = false;
-				this.fileTotalLength = 0L;
+				ableToCaculate = false;
+				fileTotalLength = 0L;
 			} else {
-				this.ableToCaculate = true;
-				this.fileTotalLength = getLength;
+				ableToCaculate = true;
+				fileTotalLength = getLength;
 			}
 			//获取服务器响应头的cookie信息
 			String set_cookie = connection.getHeaderField("Set-Cookie");
 			if (set_cookie != null && !set_cookie.equals("")) {
-				this.cookie = Cookie.newCookieInstance(set_cookie);
+				cookie = Cookie.newCookieInstance(set_cookie);
 			}
-			String ContentDisposition = connection.getHeaderField("Content-Disposition");
-			if (ContentDisposition == null) {
-				System.out.println("No file name get from the response header!");
-				flag = false;
-			} else {
-				String fileName = ContentDisposition.substring(ContentDisposition.lastIndexOf("filename=\"") + 10);
-				fileName = fileName.substring(0, fileName.indexOf("\""));
-				try {
-					// 获取URL的响应
-					InputStream in = connection.getInputStream();
-					File file = new File(savePath + fileName);
-					FileOutputStream out = new FileOutputStream(file);
-					byte[] b = new byte[1024];
-					int length = 0;
-					while ((length = in.read(b)) != -1) {
-						out.write(b, 0, length);
-						// received length bytes
-						this.fileReceiveLength = this.fileReceiveLength + length;
-					}
-					in.close();
-					out.close();
-					flag = true;
-					this.downloadComplete = true;
-				} catch (IOException e) {
-					e.printStackTrace();
-					flag = false;
-					this.ifDownloadFailed = true;
-					System.out.println("No response get!!!");
-				}
-				ds.close();
-			}
+			// 获取URL的响应
+			String contentDisposition = connection.getHeaderField("Content-Disposition");
+			InputStream in = connection.getInputStream();
+			flag = getResponseStreamToDiskFileWithItsName(contentDisposition, in, savePath);
 		} catch (IOException e) {
 			e.printStackTrace();
 			flag = false;
-			this.ifDownloadFailed = true;
+			ifDownloadFailed = true;
 			System.out.println("Request failed!");
 		}
 		return flag;
@@ -845,9 +646,9 @@ public class HttpDownloader {
 	 * </pre>
 	 */
 	public void initializeStates() {
-		this.ableToCaculate = false;
-		this.downloadComplete = false;
-		this.ifDownloadFailed = false;
+		ableToCaculate = false;
+		downloadComplete = false;
+		ifDownloadFailed = false;
 	}
 
 	/**
@@ -864,17 +665,17 @@ public class HttpDownloader {
 	 */
 	public double getCompleteRate() {
 		double flag = 0.0;
-		if (this.ifDownloadFailed) {// 如果下载失败
+		if (ifDownloadFailed) {// 如果下载失败
 			flag = -1.0D;
 		} else {
-			if (!this.ableToCaculate) {// 如果获取不到文件长度
-				if (this.downloadComplete) {// 获取不到文件长度并且完成下载
+			if (!ableToCaculate) {// 如果获取不到文件长度
+				if (downloadComplete) {// 获取不到文件长度并且完成下载
 					flag = 1.01;
 				} else {
 					flag = 0.01;
 				}
 			} else {
-				flag = this.fileReceiveLength * 1.0 / this.fileTotalLength;
+				flag = fileReceiveLength * 1.0 / fileTotalLength;
 			}
 		}
 		return flag;
@@ -910,12 +711,12 @@ public class HttpDownloader {
 		private int showTime = 1000;
 
 		public CheckThread(HttpDownloader d) {
-			this.down = d;
+			down = d;
 		}
 
 		public CheckThread(HttpDownloader d, int showTime) {
-			this.down = d;
-			this.showTime = showTime * 1000;
+			down = d;
+			showTime = showTime * 1000;
 		}
 
 		@Override
@@ -925,7 +726,7 @@ public class HttpDownloader {
 				rate = rate.substring(0, rate.indexOf(".") + 2) + "%";
 				System.out.println("Downloading....." + rate);
 				try {
-					Thread.sleep(this.showTime);
+					Thread.sleep(showTime);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -939,6 +740,73 @@ public class HttpDownloader {
 					System.out.println("Downloadind suceeded!");
 					break;
 				}
+			}
+		}
+	}
+	
+	private void getResponseStreamToByteArray(InputStream in, byte[] data){
+		try {
+			byte[] b = new byte[1];
+			while (in.read(b) != -1) {
+				data = connectTwoByteArrays(data, b);
+				// receive 1 byte content
+				fileReceiveLength = fileReceiveLength + 1;
+			}
+			in.close();
+			downloadComplete = true;
+		} catch (IOException e) {
+			e.printStackTrace();
+			ifDownloadFailed = true;
+		}
+	}
+
+	private boolean getResponseStreamToDiskFile(String savePathName, InputStream in){
+		try {
+			File file = new File(savePathName);
+			FileOutputStream out = new FileOutputStream(file);
+			byte[] b = new byte[1024];
+			int length = 0;
+			while ((length = in.read(b)) != -1) {
+				out.write(b, 0, length);
+				// received length bytes
+				fileReceiveLength = fileReceiveLength + length;
+			}
+			in.close();
+			out.close();
+			downloadComplete = true;
+			return true;
+		} catch (IOException e) {
+			e.printStackTrace();
+			ifDownloadFailed = true;
+			return false;
+		}
+	}
+
+	private boolean getResponseStreamToDiskFileWithItsName(String contentDisposition, InputStream in, String savePath){
+		if (contentDisposition == null) {
+			System.out.println("No file name get from the response header!");
+			return false;
+		} else {
+			String fileName = contentDisposition.substring(contentDisposition.lastIndexOf("filename=\"") + 10);
+			fileName = fileName.substring(0, fileName.indexOf("\""));
+			try {
+				File file = new File(savePath + fileName);
+				FileOutputStream out = new FileOutputStream(file);
+				byte[] b = new byte[1024];
+				int length = 0;
+				while ((length = in.read(b)) != -1) {
+					out.write(b, 0, length);
+					// received length bytes
+					fileReceiveLength = fileReceiveLength + length;
+				}
+				in.close();
+				out.close();
+				downloadComplete = true;
+				return true;
+			} catch (IOException e) {
+				e.printStackTrace();
+				ifDownloadFailed = true;
+				return false;
 			}
 		}
 	}

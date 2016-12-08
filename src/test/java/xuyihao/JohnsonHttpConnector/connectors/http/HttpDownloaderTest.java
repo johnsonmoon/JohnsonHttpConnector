@@ -27,7 +27,7 @@ public class HttpDownloaderTest extends TestCase {
 		parameters4.put("action", "changeHeadPhoto");
 		parameters4.put("Acc_ID", Acc_ID);
 		CommonUtils.output(requestSender.singleFileUploadWithParameters(actionURL1,
-				"C:\\Users\\Johnson\\Desktop\\minion.jpeg", "file", MIME_FileType.Image_jpeg, parameters4));
+				"C:\\Users\\Administrator\\Desktop\\minion.jpg", "file", MIME_FileType.Image_jpg, parameters4));
 
 		CommonUtils.output("输入Acc_ID: ");
 		String Acc_ID1 = CommonUtils.input();
@@ -37,7 +37,7 @@ public class HttpDownloaderTest extends TestCase {
 
 		CommonUtils.output("输入Photo_ID: ");
 		String Photo_ID = CommonUtils.input();
-		downloader.downloadByGet("C:\\Users\\Johnson\\Desktop\\download.jpg",
+		downloader.downloadByGet("C:\\Users\\Administrator\\Desktop\\download.jpg",
 				actionURL1 + "?action=getPhotoById&Photo_ID=" + Photo_ID);
 	}
 
