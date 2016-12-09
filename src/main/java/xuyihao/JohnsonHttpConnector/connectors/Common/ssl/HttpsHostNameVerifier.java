@@ -1,4 +1,4 @@
-package xuyihao.JohnsonHttpConnector.connectors.https.ssl;
+package xuyihao.JohnsonHttpConnector.connectors.Common.ssl;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLSession;

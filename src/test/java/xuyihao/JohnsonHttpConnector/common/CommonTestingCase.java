@@ -13,7 +13,7 @@ import xuyihao.JohnsonHttpConnector.connectors.http.HttpDownloader;
 import xuyihao.JohnsonHttpConnector.connectors.http.HttpMultiThreadDownloader;
 import xuyihao.JohnsonHttpConnector.connectors.http.HttpRequestSender;
 import xuyihao.JohnsonHttpConnector.enums.MIME_FileType;
-import xuyihao.JohnsonHttpConnector.utils.RandomUtils;
+import xuyihao.JohnsonHttpConnector.util.RandomUtils;
 
 /**
  * 

@@ -1,10 +1,10 @@
 package xuyihao.JohnsonHttpConnector.connectors.util;
 
+import xuyihao.JohnsonHttpConnector.connectors.Common.CommonConnection;
 import xuyihao.JohnsonHttpConnector.enums.MIME_FileType;
-import xuyihao.JohnsonHttpConnector.utils.RandomUtils;
+import xuyihao.JohnsonHttpConnector.util.RandomUtils;
 
 import java.io.*;
-import java.net.HttpURLConnection;
 import java.net.ProtocolException;
 import java.util.Map;
 import java.util.Set;
@@ -33,7 +33,7 @@ public class DataUtils {
 	 * 
 	 * @param connection
 	   */
-	public static void setPostConnectionPropertiesByURLEncoded(HttpURLConnection connection) {
+	public static void setPostConnectionPropertiesByURLEncoded(CommonConnection connection) {
 		try {
 			connection.setDoInput(true);
 			connection.setDoOutput(true);
@@ -52,7 +52,7 @@ public class DataUtils {
 	 *
 	 * @param connection
 	 */
-	public static void setPostConnectionPropertiesByMultiPart(HttpURLConnection connection) {
+	public static void setPostConnectionPropertiesByMultiPart(CommonConnection connection) {
 		try {
 			// 发送post请求需要下面两行
 			connection.setDoInput(true);

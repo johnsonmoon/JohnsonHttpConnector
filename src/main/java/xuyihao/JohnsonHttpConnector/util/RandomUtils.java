@@ -1,4 +1,4 @@
-package xuyihao.JohnsonHttpConnector.utils;
+package xuyihao.JohnsonHttpConnector.util;
 
 import java.security.SecureRandom;
 

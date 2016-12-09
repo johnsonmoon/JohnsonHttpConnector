@@ -5,7 +5,7 @@ import java.util.HashMap;
 import junit.framework.TestCase;
 import xuyihao.JohnsonHttpConnector.common.utils.CommonUtils;
 import xuyihao.JohnsonHttpConnector.enums.MIME_FileType;
-import xuyihao.JohnsonHttpConnector.utils.RandomUtils;
+import xuyihao.JohnsonHttpConnector.util.RandomUtils;
 
 public class HttpRequestSenderTest extends TestCase {
 	HttpRequestSender requestSender = new HttpRequestSender();

@@ -1,12 +1,12 @@
-package xuyihao.JohnsonHttpConnector.connectors.http;
+package xuyihao.JohnsonHttpConnector.connectors.https;
 
 import xuyihao.JohnsonHttpConnector.connectors.Common.CommonConnection;
 import xuyihao.JohnsonHttpConnector.connectors.Common.CommonDownloader;
 import xuyihao.JohnsonHttpConnector.entity.Cookie;
 
 /**
- * 网络资源(文件)下载工具类
- * 
+ * 网络资源(文件)下载工具类(Https)
+ *
  * <pre>
  *  (1)发送GET POST请求，接收网络文件
  *  (2)此工具类不支持多线程下载，IO阻塞线程
@@ -21,17 +21,17 @@ import xuyihao.JohnsonHttpConnector.entity.Cookie;
  *  (6)添加查看进度支持,需要调用 getCompleteRate 方法
  * </pre>
  * 
- * @Author Xuyh created at 2016年9月30日 下午4:34:39
+ * Created by Xuyh on 2016/12/9.
  */
-public class HttpDownloader extends CommonDownloader {
-	public HttpDownloader() {
+public class HttpsDownloader extends CommonDownloader {
+	public HttpsDownloader() {
 	}
 
-	public HttpDownloader(Cookie cookie) {
+	public HttpsDownloader(Cookie cookie) {
 		super(cookie);
 	}
 
 	public void bindConnectionType() {
-		setConnectionType(CommonConnection.CONNECTION_TYPE_HTTP);
+		setConnectionType(CommonConnection.CONNECTION_TYPE_HTTPS);
 	}
 }
