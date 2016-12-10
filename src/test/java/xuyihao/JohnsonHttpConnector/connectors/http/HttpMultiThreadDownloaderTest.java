@@ -1,15 +1,11 @@
 package xuyihao.JohnsonHttpConnector.connectors.http;
 
-import java.util.HashMap;
-
 import junit.framework.TestCase;
-import sun.awt.windows.ThemeReader;
 import xuyihao.JohnsonHttpConnector.common.utils.CommonUtils;
-import xuyihao.JohnsonHttpConnector.connectors.https.HttpsMultiThreadDownloader;
 
 public class HttpMultiThreadDownloaderTest extends TestCase {
 	public static String actionURL1 = "http://115.28.192.61:8088/rongyi/accounts";
-	private HttpRequestSender requestSender = new HttpRequestSender();
+	//private HttpRequestSender requestSender = new HttpRequestSender();
 
 	public void testDownloadToPath() {
 		/*
@@ -39,7 +35,7 @@ public class HttpMultiThreadDownloaderTest extends TestCase {
 		while (rate >= 0.0 && rate <= 1.0) {
 			try {
 				rate = downloader.getCompleteRate();
-				String output = String.valueOf(rate  * 100);
+				String output = String.valueOf(rate * 100);
 				output = output.substring(0, output.indexOf(".") + 2) + "%";
 				CommonUtils.output(output);
 				Thread.sleep(5000);

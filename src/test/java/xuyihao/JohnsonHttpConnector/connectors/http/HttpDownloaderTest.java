@@ -4,7 +4,6 @@ import java.util.HashMap;
 
 import junit.framework.TestCase;
 import xuyihao.JohnsonHttpConnector.common.utils.CommonUtils;
-import xuyihao.JohnsonHttpConnector.connectors.https.HttpsDownloader;
 import xuyihao.JohnsonHttpConnector.enums.MIME_FileType;
 
 public class HttpDownloaderTest extends TestCase {
