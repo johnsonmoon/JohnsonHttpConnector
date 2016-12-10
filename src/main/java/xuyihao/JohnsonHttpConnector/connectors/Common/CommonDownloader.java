@@ -62,7 +62,7 @@ public abstract class CommonDownloader {
 	 * </pre>
 	 *
 	 */
-	public abstract void bindConnectionType();
+	protected abstract void bindConnectionType();
 
 	protected void setConnectionType(int connectionType) {
 		this.connectionType = connectionType;

@@ -4,9 +4,11 @@ import java.util.HashMap;
 
 import junit.framework.TestCase;
 import xuyihao.JohnsonHttpConnector.common.utils.CommonUtils;
+import xuyihao.JohnsonHttpConnector.connectors.https.HttpsDownloader;
 import xuyihao.JohnsonHttpConnector.enums.MIME_FileType;
 
 public class HttpDownloaderTest extends TestCase {
+
 	public static String actionURL1 = "http://115.28.192.61:8088/rongyi/accounts";
 	private HttpRequestSender requestSender = new HttpRequestSender();
 	private HttpDownloader downloader = new HttpDownloader();
@@ -40,5 +42,4 @@ public class HttpDownloaderTest extends TestCase {
 		downloader.downloadByGet("C:\\Users\\Administrator\\Desktop\\download.jpg",
 				actionURL1 + "?action=getPhotoById&Photo_ID=" + Photo_ID);
 	}
-
 }

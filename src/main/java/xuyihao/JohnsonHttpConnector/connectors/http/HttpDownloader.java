@@ -31,7 +31,7 @@ public class HttpDownloader extends CommonDownloader {
 		super(cookie);
 	}
 
-	public void bindConnectionType() {
+	protected void bindConnectionType() {
 		setConnectionType(CommonConnection.CONNECTION_TYPE_HTTP);
 	}
 }

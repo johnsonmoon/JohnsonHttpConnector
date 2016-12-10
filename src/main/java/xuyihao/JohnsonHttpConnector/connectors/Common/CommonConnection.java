@@ -36,15 +36,15 @@ public class CommonConnection {
 	private HttpURLConnection httpURLConnection;
 	private HttpsURLConnection httpsURLConnection;
 
-    /**
-     * 获取连接实例
-     *
-     * @param url
-     * @param connectionType 1:http--2:https
-     */
-    public static CommonConnection getInstance(URL url, int connectionType){
-        return new CommonConnection(url, connectionType);
-    }
+	/**
+	 * 获取连接实例
+	 *
+	 * @param url
+	 * @param connectionType 1:http--2:https
+	 */
+	public static CommonConnection getInstance(URL url, int connectionType) {
+		return new CommonConnection(url, connectionType);
+	}
 
 	/**
 	 * 创建连接实例
@@ -158,6 +158,26 @@ public class CommonConnection {
 			httpsURLConnection.setDoInput(doinput);
 		} else {
 			httpURLConnection.setDoInput(doinput);
+		}
+	}
+
+	public void setConnectTimeout(int timeout) {
+		if (connectionType == 1) {
+			httpURLConnection.setConnectTimeout(timeout);
+		} else if (connectionType == 2) {
+			httpsURLConnection.setConnectTimeout(timeout);
+		} else {
+			httpURLConnection.setConnectTimeout(timeout);
+		}
+	}
+
+	public void disconnect() {
+		if (connectionType == 1) {
+			httpURLConnection.disconnect();
+		} else if (connectionType == 2) {
+			httpsURLConnection.disconnect();
+		} else {
+			httpURLConnection.disconnect();
 		}
 	}
 }

@@ -41,7 +41,7 @@ public abstract class CommonRequestSender {
 	 * </pre>
 	 *
 	 */
-	public abstract void bindConnectionType();
+	protected abstract void bindConnectionType();
 
 	protected void setConnectionType(int connectionType) {
 		this.connectionType = connectionType;

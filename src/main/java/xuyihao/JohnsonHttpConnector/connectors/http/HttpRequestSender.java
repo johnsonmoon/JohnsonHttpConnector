@@ -22,7 +22,7 @@ public class HttpRequestSender extends CommonRequestSender {
 		super(cookie);
 	}
 
-	public void bindConnectionType() {
+	protected void bindConnectionType() {
 		setConnectionType(CommonConnection.CONNECTION_TYPE_HTTP);
 	}
 }
