@@ -1,4 +1,4 @@
-package xuyihao.JohnsonHttpConnector.connectors.Common;
+package xuyihao.JohnsonHttpConnector.connectors.common;
 
 import xuyihao.JohnsonHttpConnector.entity.Cookie;
 

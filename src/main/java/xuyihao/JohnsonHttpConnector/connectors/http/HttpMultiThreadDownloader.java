@@ -2,8 +2,8 @@ package xuyihao.JohnsonHttpConnector.connectors.http;
 
 import java.util.HashMap;
 
-import xuyihao.JohnsonHttpConnector.connectors.Common.CommonConnection;
-import xuyihao.JohnsonHttpConnector.connectors.Common.CommonMultiThreadDownloader;
+import xuyihao.JohnsonHttpConnector.connectors.common.CommonConnection;
+import xuyihao.JohnsonHttpConnector.connectors.common.CommonMultiThreadDownloader;
 import xuyihao.JohnsonHttpConnector.entity.Cookie;
 
 /**

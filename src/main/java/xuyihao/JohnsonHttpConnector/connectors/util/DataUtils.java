@@ -1,6 +1,6 @@
 package xuyihao.JohnsonHttpConnector.connectors.util;
 
-import xuyihao.JohnsonHttpConnector.connectors.Common.CommonConnection;
+import xuyihao.JohnsonHttpConnector.connectors.common.CommonConnection;
 import xuyihao.JohnsonHttpConnector.enums.MIME_FileType;
 import xuyihao.JohnsonHttpConnector.util.RandomUtils;
 

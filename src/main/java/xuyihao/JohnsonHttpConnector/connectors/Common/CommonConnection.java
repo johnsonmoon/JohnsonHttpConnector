@@ -1,7 +1,7 @@
-package xuyihao.JohnsonHttpConnector.connectors.Common;
+package xuyihao.JohnsonHttpConnector.connectors.common;
 
-import xuyihao.JohnsonHttpConnector.connectors.Common.ssl.HttpsHostNameVerifier;
-import xuyihao.JohnsonHttpConnector.connectors.Common.ssl.HttpsTrustManager;
+import xuyihao.JohnsonHttpConnector.connectors.common.ssl.HttpsHostNameVerifier;
+import xuyihao.JohnsonHttpConnector.connectors.common.ssl.HttpsTrustManager;
 
 import javax.net.ssl.HttpsURLConnection;
 import java.io.IOException;

@@ -1,7 +1,7 @@
 package xuyihao.JohnsonHttpConnector.connectors.https;
 
-import xuyihao.JohnsonHttpConnector.connectors.Common.CommonConnection;
-import xuyihao.JohnsonHttpConnector.connectors.Common.CommonRequestSender;
+import xuyihao.JohnsonHttpConnector.connectors.common.CommonConnection;
+import xuyihao.JohnsonHttpConnector.connectors.common.CommonRequestSender;
 import xuyihao.JohnsonHttpConnector.entity.Cookie;
 
 /**
