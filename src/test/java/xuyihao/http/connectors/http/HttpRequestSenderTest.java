@@ -9,7 +9,7 @@ import xuyihao.http.enums.MIME_FileType;
 import xuyihao.http.util.RandomUtils;
 
 public class HttpRequestSenderTest extends TestCase {
-	HttpRequestSender requestSender = new HttpRequestSender();
+	HttpRequestSender requestSender = HttpRequestSender.getInstance();
 	String actionURL = "http://115.28.192.61:8088/rongyi/accounts";
 
 	public void test() {

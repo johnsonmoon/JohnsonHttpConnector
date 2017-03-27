@@ -2,7 +2,7 @@ package xuyihao.http.connectors.common;
 
 import java.io.*;
 import java.net.URL;
-import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 import xuyihao.http.connectors.util.DataUtils;
@@ -153,10 +153,10 @@ public abstract class CommonDownloader {
 	 * </pre>
 	 *
 	 * @param actionURL 发送get请求的URL地址(例如：http://www.johnson.cc:8080/Test/download)
-	 * @param parameters 发送get请求URL后跟着的具体参数,以HashMap<String, String>形式传入key=value值
+	 * @param parameters 发送get请求URL后跟着的具体参数,以Map<String, String>形式传入key=value值
 	 * @return byte[] 返回一个储存文件内容的字节数组
 	 */
-	public byte[] downloadByGet(String actionURL, HashMap<String, String> parameters) {
+	public byte[] downloadByGet(String actionURL, Map<String, String> parameters) {
 		fileTotalLength = 0L;
 		fileReceiveLength = 0L;
 		ableToCaculate = false;
@@ -269,10 +269,10 @@ public abstract class CommonDownloader {
 	 * @param savePathName 文件在磁盘中的储存路径&文件名,文件路径+名称需要自己定义
 	 * @param actionURL actionURL
 	 *          发送get请求的URL地址(例如：http://www.johnson.cc:8080/Test/download)
-	 * @param parameters 发送get请求URL后跟着的具体参数,以HashMap<String, String>形式传入key=value值
+	 * @param parameters 发送get请求URL后跟着的具体参数,以Map<String, String>形式传入key=value值
 	 * @return 返回true如果接收文件成功
 	 */
-	public boolean downloadByGet(String savePathName, String actionURL, HashMap<String, String> parameters) {
+	public boolean downloadByGet(String savePathName, String actionURL, Map<String, String> parameters) {
 		fileTotalLength = 0L;
 		fileReceiveLength = 0L;
 		ableToCaculate = false;
@@ -389,10 +389,10 @@ public abstract class CommonDownloader {
 	 *
 	 * @param savePath 文件在磁盘中的储存路径,文件名会从服务器获得
 	 * @param actionURL 发送get请求的URL地址(例如：http://www.johnson.cc:8080/Test/download)
-	 * @param parameters 发送get请求URL后跟着的具体参数,以HashMap<String, String>形式传入key=value值
+	 * @param parameters 发送get请求URL后跟着的具体参数,以Map<String, String>形式传入key=value值
 	 * @return 返回true如果接收文件成功
 	 */
-	public boolean downloadByGetSaveToPath(String savePath, String actionURL, HashMap<String, String> parameters) {
+	public boolean downloadByGetSaveToPath(String savePath, String actionURL, Map<String, String> parameters) {
 		fileTotalLength = 0L;
 		fileReceiveLength = 0L;
 		ableToCaculate = false;
@@ -450,10 +450,10 @@ public abstract class CommonDownloader {
 	 * </pre>
 	 *
 	 * @param actionURL 发送get请求的URL地址(例如：http://www.johnson.cc:8080/Test/download)
-	 * @param parameters 发送get请求数据段中的参数,以HashMap<String, String>形式传入key=value值
+	 * @param parameters 发送get请求数据段中的参数,以Map<String, String>形式传入key=value值
 	 * @return byte[] 返回一个储存文件内容的字节数组
 	 */
-	public byte[] downloadByPost(String actionURL, HashMap<String, String> parameters) {
+	public byte[] downloadByPost(String actionURL, Map<String, String> parameters) {
 		fileTotalLength = 0L;
 		fileReceiveLength = 0L;
 		ableToCaculate = false;
@@ -515,10 +515,10 @@ public abstract class CommonDownloader {
 	 *
 	 * @param savePathName 文件在磁盘中的储存路径&文件名,文件路径+名称需要自己定义
 	 * @param actionURL 发送get请求的URL地址(例如：http://www.johnson.cc:8080/Test/download)
-	 * @param parameters 发送get请求数据段中的参数,以HashMap<String, String>形式传入key=value值
+	 * @param parameters 发送get请求数据段中的参数,以Map<String, String>形式传入key=value值
 	 * @return 返回true如果接收文件成功
 	 */
-	public boolean downloadByPost(String savePathName, String actionURL, HashMap<String, String> parameters) {
+	public boolean downloadByPost(String savePathName, String actionURL, Map<String, String> parameters) {
 		fileTotalLength = 0L;
 		fileReceiveLength = 0L;
 		ableToCaculate = false;
@@ -582,10 +582,10 @@ public abstract class CommonDownloader {
 	 *
 	 * @param savePath 文件在磁盘中的储存路径,文件名会从服务器获得
 	 * @param actionURL 发送get请求的URL地址(例如：http://www.johnson.cc:8080/Test/download)
-	 * @param parameters 发送get请求数据段中的参数,以HashMap<String, String>形式传入key=value值
+	 * @param parameters 发送get请求数据段中的参数,以Map<String, String>形式传入key=value值
 	 * @return 返回true如果接收文件成功
 	 */
-	public boolean downloadByPostSaveToPath(String savePath, String actionURL, HashMap<String, String> parameters) {
+	public boolean downloadByPostSaveToPath(String savePath, String actionURL, Map<String, String> parameters) {
 		fileTotalLength = 0L;
 		fileReceiveLength = 0L;
 		ableToCaculate = false;

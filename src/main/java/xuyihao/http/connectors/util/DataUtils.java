@@ -29,6 +29,25 @@ public class DataUtils {
 	public static final String boundary = "----------------------" + RandomUtils.getRandomString(18);
 
 	/**
+	 * 设置连接基本参数(application/json)
+	 * 
+	 * @param connection
+	 */
+	public static void setPostConnectionPropertiesByJSON(CommonConnection connection) {
+		try {
+			connection.setDoInput(true);
+			connection.setDoOutput(true);
+			connection.setUseCaches(false);
+			connection.setRequestMethod("POST");
+			connection.setRequestProperty("Connection", "Keep-Alive");
+			connection.setRequestProperty("Charset", "UTF-8");
+			connection.setRequestProperty("Content-Type", "application/json");
+		} catch (ProtocolException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
 	 * 设置连接基本参数(x-www-form-urlencoded)
 	 * 
 	 * @param connection

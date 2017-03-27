@@ -21,32 +21,52 @@ import xuyihao.http.entity.Cookie;
  */
 public class HttpsMultiThreadDownloader extends CommonMultiThreadDownloader {
 	/**
-	 *
+	 * 获取HttpsMultiThreadDownloader实例对象
+	 * 
 	 * @param actionURL 需要下载资源的URL地址,不跟参数,或者直接将参数写在URL上面
 	 * @param threadNumber 需要启动的下载线程数量
+	 * @return
 	 */
-	public HttpsMultiThreadDownloader(String actionURL, int threadNumber) {
-		super(actionURL, threadNumber);
+	public static HttpsMultiThreadDownloader getInstance(String actionURL, int threadNumber) {
+		return new HttpsMultiThreadDownloader(actionURL, threadNumber);
 	}
 
 	/**
-	 *
+	 * 获取HttpsMultiThreadDownloader实例对象
+	 * 
 	 * @param actionURL 需要下载资源的URL地址
 	 * @param parameters URL后的具体参数，以key=value的形式传递
 	 * @param threadNumber 需要启动的下载线程数量
+	 * @return
 	 */
-	public HttpsMultiThreadDownloader(String actionURL, HashMap<String, String> parameters, int threadNumber) {
-		super(actionURL, parameters, threadNumber);
+	public static HttpsMultiThreadDownloader getInstance(String actionURL, HashMap<String, String> parameters,
+			int threadNumber) {
+		return new HttpsMultiThreadDownloader(actionURL, parameters, threadNumber);
 	}
 
 	/**
-	 *
+	 * 获取HttpsMultiThreadDownloader实例对象
+	 * 
 	 * @param actionURL 需要下载资源的URL地址
 	 * @param parameters URL后的具体参数，以key=value的形式传递
 	 * @param threadNumber 需要启动的下载线程数量
 	 * @param cookie 保持会话信息的cookie
+	 * @return
 	 */
-	public HttpsMultiThreadDownloader(String actionURL, HashMap<String, String> parameters, int threadNumber,
+	public static HttpsMultiThreadDownloader getInstance(String actionURL, HashMap<String, String> parameters,
+			int threadNumber, Cookie cookie) {
+		return new HttpsMultiThreadDownloader(actionURL, parameters, threadNumber, cookie);
+	}
+
+	private HttpsMultiThreadDownloader(String actionURL, int threadNumber) {
+		super(actionURL, threadNumber);
+	}
+
+	private HttpsMultiThreadDownloader(String actionURL, HashMap<String, String> parameters, int threadNumber) {
+		super(actionURL, parameters, threadNumber);
+	}
+
+	private HttpsMultiThreadDownloader(String actionURL, HashMap<String, String> parameters, int threadNumber,
 			Cookie cookie) {
 		super(actionURL, parameters, threadNumber, cookie);
 	}

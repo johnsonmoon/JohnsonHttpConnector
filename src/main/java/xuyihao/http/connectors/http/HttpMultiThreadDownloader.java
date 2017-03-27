@@ -22,32 +22,52 @@ import xuyihao.http.entity.Cookie;
  */
 public class HttpMultiThreadDownloader extends CommonMultiThreadDownloader {
 	/**
-	 *
+	 * 获取HttpMultiThreadDownloader对象实例
+	 * 
 	 * @param actionURL 需要下载资源的URL地址,不跟参数,或者直接将参数写在URL上面
 	 * @param threadNumber 需要启动的下载线程数量
-	   */
-	public HttpMultiThreadDownloader(String actionURL, int threadNumber) {
-		super(actionURL, threadNumber);
+	 * @return
+	 */
+	public static HttpMultiThreadDownloader getInstance(String actionURL, int threadNumber) {
+		return new HttpMultiThreadDownloader(actionURL, threadNumber);
 	}
 
 	/**
-	 *
+	 * 获取HttpMultiThreadDownloader对象实例
+	 * 
 	 * @param actionURL 需要下载资源的URL地址
 	 * @param parameters URL后的具体参数，以key=value的形式传递
 	 * @param threadNumber 需要启动的下载线程数量
-	   */
-	public HttpMultiThreadDownloader(String actionURL, HashMap<String, String> parameters, int threadNumber) {
-		super(actionURL, parameters, threadNumber);
+	 * @return
+	 */
+	public static HttpMultiThreadDownloader getInstance(String actionURL, HashMap<String, String> parameters,
+			int threadNumber) {
+		return new HttpMultiThreadDownloader(actionURL, parameters, threadNumber);
 	}
 
 	/**
-	 *
+	 * 获取HttpMultiThreadDownloader对象实例
+	 * 
 	 * @param actionURL 需要下载资源的URL地址
 	 * @param parameters URL后的具体参数，以key=value的形式传递
 	 * @param threadNumber 需要启动的下载线程数量
 	 * @param cookie 保持会话信息的cookie
-	   */
-	public HttpMultiThreadDownloader(String actionURL, HashMap<String, String> parameters, int threadNumber,
+	 * @return
+	 */
+	public static HttpMultiThreadDownloader getInstance(String actionURL, HashMap<String, String> parameters,
+			int threadNumber, Cookie cookie) {
+		return new HttpMultiThreadDownloader(actionURL, parameters, threadNumber, cookie);
+	}
+
+	private HttpMultiThreadDownloader(String actionURL, int threadNumber) {
+		super(actionURL, threadNumber);
+	}
+
+	private HttpMultiThreadDownloader(String actionURL, HashMap<String, String> parameters, int threadNumber) {
+		super(actionURL, parameters, threadNumber);
+	}
+
+	private HttpMultiThreadDownloader(String actionURL, HashMap<String, String> parameters, int threadNumber,
 			Cookie cookie) {
 		super(actionURL, parameters, threadNumber, cookie);
 	}

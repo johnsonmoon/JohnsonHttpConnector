@@ -8,10 +8,10 @@ import xuyihao.http.connectors.https.HttpsRequestSender;
  * Created by Xuyh on 2016/12/8.
  */
 public class HttpsRequestSenderTest extends TestCase {
-	private HttpsRequestSender sender = new HttpsRequestSender();
+	private HttpsRequestSender sender = HttpsRequestSender.getInstance();
 
-    public void test() {
-        String response = sender.executeGet("https://192.168.192.128:9044/ibm/console/logon.jsp");
-        CommonUtils.output(response);
+	public void test() {
+		String response = sender.executeGet("https://192.168.192.128:9044/ibm/console/logon.jsp");
+		CommonUtils.output(response);
 	}
 }

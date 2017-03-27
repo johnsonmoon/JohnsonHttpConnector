@@ -11,8 +11,8 @@ import xuyihao.http.enums.MIME_FileType;
 public class HttpDownloaderTest extends TestCase {
 
 	public static String actionURL1 = "http://115.28.192.61:8088/rongyi/accounts";
-	private HttpRequestSender requestSender = new HttpRequestSender();
-	private HttpDownloader downloader = new HttpDownloader();
+	private HttpRequestSender requestSender = HttpRequestSender.getInstance();
+	private HttpDownloader downloader = HttpDownloader.getInstance();
 
 	public void test() {
 		HashMap<String, String> parameters2 = new HashMap<String, String>();

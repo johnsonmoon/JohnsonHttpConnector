@@ -24,10 +24,29 @@ import xuyihao.http.entity.Cookie;
  * Created by Xuyh on 2016/12/9.
  */
 public class HttpsDownloader extends CommonDownloader {
-	public HttpsDownloader() {
+	/**
+	 * 获取HttpsDownloader实例对象
+	 * 
+	 * @return
+	 */
+	public static HttpsDownloader getInstance() {
+		return new HttpsDownloader();
 	}
 
-	public HttpsDownloader(Cookie cookie) {
+	/**
+	 * 获取HttpsDownloader实例对象
+	 * 
+	 * @param cookie
+	 * @return
+	 */
+	public static HttpsDownloader getInstance(Cookie cookie) {
+		return new HttpsDownloader(cookie);
+	}
+
+	private HttpsDownloader() {
+	}
+
+	private HttpsDownloader(Cookie cookie) {
 		super(cookie);
 	}
 

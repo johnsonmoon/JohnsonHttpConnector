@@ -52,7 +52,7 @@ public class CommonTestingCase {
 	}
 
 	public static void testSendingRequestToRongYi() {
-		HttpRequestSender sender = new HttpRequestSender();
+		HttpRequestSender sender = HttpRequestSender.getInstance();
 		String actionURL = "http://127.0.0.1:8095/rongyi/accounts";
 		HashMap<String, String> parameters = new HashMap<String, String>();
 		parameters.put("action", "register");
@@ -87,7 +87,7 @@ public class CommonTestingCase {
 
 	public static void testUploadFile() {
 		String actionURL = "http://115.28.192.61:8088/rongyi/accounts";
-		HttpRequestSender sender = new HttpRequestSender();
+		HttpRequestSender sender = HttpRequestSender.getInstance();
 		CommonUtils.output(sender.executeGet(actionURL + "?action=register&Acc_name=" + RandomUtils.getRandomString(5)
 				+ "Acc_pwd=jjnma&Acc_sex=M&Acc_loc=kmn"));
 		CommonUtils.output("Input Acc_ID: ");
@@ -98,9 +98,9 @@ public class CommonTestingCase {
 
 	public static void testDownload() {
 		String actionURL = "http://115.28.192.61:8088/rongyi/courses";
-		HttpRequestSender sender = new HttpRequestSender();
+		HttpRequestSender sender = HttpRequestSender.getInstance();
 		CommonUtils.output(sender.executeGet(actionURL + "?action=getCachedCoursesList"));
-		HttpDownloader downloader = new HttpDownloader(sender.getCookie());
+		HttpDownloader downloader = HttpDownloader.getInstance(sender.getCookie());
 		CommonUtils.output("Input Vedio_ID: ");
 		String Vedio_ID = CommonUtils.input();
 		downloader.downloadByGet("C:\\Users\\Johnson\\Desktop\\kkmlml.mp4",
@@ -109,12 +109,12 @@ public class CommonTestingCase {
 
 	public static void testDownloadByMultiThread() {
 		String actionURL = "http://115.28.192.61:8088/rongyi/courses";
-		HttpRequestSender sender = new HttpRequestSender();
+		HttpRequestSender sender = HttpRequestSender.getInstance();
 		CommonUtils.output(sender.executeGet(actionURL + "?action=getCachedCoursesList"));
 		CommonUtils.output("Input Vedio_ID: ");
 		String Vedio_ID = CommonUtils.input();
-		HttpMultiThreadDownloader downloader = new HttpMultiThreadDownloader(
-				actionURL + "?action=getVedioById&Vedio_ID=" + Vedio_ID, 5);
+		HttpMultiThreadDownloader downloader = HttpMultiThreadDownloader
+				.getInstance(actionURL + "?action=getVedioById&Vedio_ID=" + Vedio_ID, 5);
 		downloader.setCookie(sender.getCookie());
 		downloader.download("C:\\Users\\Johnson\\Desktop\\kkmadjioajfoial.mp4");
 	}

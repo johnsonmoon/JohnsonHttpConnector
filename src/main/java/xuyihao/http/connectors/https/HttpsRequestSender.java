@@ -15,10 +15,29 @@ import xuyihao.http.entity.Cookie;
  * Created by Xuyh on 2016/12/8.
  */
 public class HttpsRequestSender extends CommonRequestSender {
-	public HttpsRequestSender() {
+	/**
+	 * 获取HttpsRequestSender实例对象
+	 * 
+	 * @return
+	 */
+	public static HttpsRequestSender getInstance() {
+		return new HttpsRequestSender();
 	}
 
-	public HttpsRequestSender(Cookie cookie) {
+	/**
+	 * 获取HttpsRequestSender实例对象
+	 * 
+	 * @param cookie
+	 * @return
+	 */
+	public static HttpsRequestSender getInstance(Cookie cookie) {
+		return new HttpsRequestSender(cookie);
+	}
+
+	private HttpsRequestSender() {
+	}
+
+	private HttpsRequestSender(Cookie cookie) {
 		super(cookie);
 	}
 

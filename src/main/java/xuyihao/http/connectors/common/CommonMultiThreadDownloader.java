@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.RandomAccessFile;
 import java.net.URL;
-import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 import xuyihao.http.entity.Cookie;
@@ -37,6 +37,7 @@ public abstract class CommonMultiThreadDownloader {
 
 	/**
 	 * 需要重写的方法
+	 * 
 	 * <pre>
 	 *     用法：设置连接类型
 	 *     调用setConnectionType()方法
@@ -71,7 +72,7 @@ public abstract class CommonMultiThreadDownloader {
 	 * @param parameters URL后的具体参数，以key=value的形式传递
 	 * @param threadNumber 需要启动的下载线程数量
 	 */
-	public CommonMultiThreadDownloader(String actionURL, HashMap<String, String> parameters, int threadNumber) {
+	public CommonMultiThreadDownloader(String actionURL, Map<String, String> parameters, int threadNumber) {
 		bindConnectionType();
 		this.trueRequestURL = actionURL;
 		trueRequestURL += "?";
@@ -91,7 +92,7 @@ public abstract class CommonMultiThreadDownloader {
 	 * @param threadNumber 需要启动的下载线程数量
 	 * @param cookie 保持会话信息的cookie
 	 */
-	public CommonMultiThreadDownloader(String actionURL, HashMap<String, String> parameters, int threadNumber,
+	public CommonMultiThreadDownloader(String actionURL, Map<String, String> parameters, int threadNumber,
 			Cookie cookie) {
 		bindConnectionType();
 		this.trueRequestURL = actionURL;
@@ -199,8 +200,7 @@ public abstract class CommonMultiThreadDownloader {
 	 *
 	 * @param targetPath 文件存放路径,文件名将从服务器响应中获取
 	 * @return boolean true if successfully, false if failed
-	 *         如果成功,返回true并开始下载,如果失败返回false
-	 *         如果获取不到文件大小，返回false
+	 *         如果成功,返回true并开始下载,如果失败返回false 如果获取不到文件大小，返回false
 	 */
 	public boolean downloadToPath(String targetPath) {
 		boolean flag = false;
@@ -275,7 +275,7 @@ public abstract class CommonMultiThreadDownloader {
 	 * <pre>
 	 * 		get the complete percentage of downloading
 	 * 		获取整个下载完成度百分比(double 显示)
-	 * 		如果下载线程为空，则返回-1.0	
+	 * 		如果下载线程为空，则返回-1.0
 	 * </pre>
 	 *
 	 * @return
