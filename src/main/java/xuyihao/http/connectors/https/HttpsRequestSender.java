@@ -1,7 +1,7 @@
 package xuyihao.http.connectors.https;
 
-import xuyihao.http.connectors.common.CommonConnection;
-import xuyihao.http.connectors.common.CommonRequestSender;
+import xuyihao.http.connectors.common.Connection;
+import xuyihao.http.connectors.common.RequestSender;
 import xuyihao.http.entity.Cookie;
 
 /**
@@ -14,7 +14,7 @@ import xuyihao.http.entity.Cookie;
  *
  * Created by Xuyh on 2016/12/8.
  */
-public class HttpsRequestSender extends CommonRequestSender {
+public class HttpsRequestSender extends RequestSender {
 	/**
 	 * 获取HttpsRequestSender实例对象
 	 * 
@@ -42,6 +42,6 @@ public class HttpsRequestSender extends CommonRequestSender {
 	}
 
 	protected void bindConnectionType() {
-		setConnectionType(CommonConnection.CONNECTION_TYPE_HTTPS);
+		setConnectionType(Connection.CONNECTION_TYPE_HTTPS);
 	}
 }

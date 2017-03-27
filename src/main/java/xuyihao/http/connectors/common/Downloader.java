@@ -27,11 +27,10 @@ import xuyihao.http.entity.Cookie;
  * 
  * Created by Xuyh on 2016/12/9.
  */
-public abstract class CommonDownloader {
+public abstract class Downloader {
 	private int connectionType;
 	/**
-	 * cookie的配置逻辑：
-	 * 每次请求发送时候都会在请求头带上cookie信息(如果cookie为null则不带上),
+	 * cookie的配置逻辑： 每次请求发送时候都会在请求头带上cookie信息(如果cookie为null则不带上),
 	 * 然后从响应头中获取新的cookie值刷新当前值,可以起到保存同服务器的会话的作用
 	 */
 	private Cookie cookie = null;
@@ -52,13 +51,14 @@ public abstract class CommonDownloader {
 
 	/**
 	 * 需要重写的方法
+	 * 
 	 * <pre>
 	 *     用法：设置连接类型
 	 *     调用setConnectionType()方法
 	 *     参数值
-	 *     CommonConnection.CONNECTION_TYPE_HTTP
+	 *     Connection.CONNECTION_TYPE_HTTP
 	 *     或
-	 *     CommonConnection.CONNECTION_TYPE_HTTPS
+	 *     Connection.CONNECTION_TYPE_HTTPS
 	 * </pre>
 	 *
 	 */
@@ -68,11 +68,11 @@ public abstract class CommonDownloader {
 		this.connectionType = connectionType;
 	}
 
-	public CommonDownloader() {
+	public Downloader() {
 		bindConnectionType();
 	}
 
-	public CommonDownloader(Cookie cookie) {
+	public Downloader(Cookie cookie) {
 		bindConnectionType();
 		this.cookie = cookie;
 	}
@@ -113,7 +113,7 @@ public abstract class CommonDownloader {
 		try {
 			String trueRequestURL = actionURL;
 			URL url = new URL(trueRequestURL);
-			CommonConnection connection = CommonConnection.getInstance(url, connectionType);
+			Connection connection = Connection.getInstance(url, connectionType);
 			connection.setRequestMethod("GET");
 			// 如果cookie不为空
 			if (cookie != null) {
@@ -128,7 +128,7 @@ public abstract class CommonDownloader {
 				ableToCaculate = true;
 				fileTotalLength = getLength;
 			}
-			//获取服务器响应头的cookie信息
+			// 获取服务器响应头的cookie信息
 			String set_cookie = connection.getHeaderField("Set-Cookie");
 			if (set_cookie != null && !set_cookie.equals("")) {
 				cookie = Cookie.newCookieInstance(set_cookie);
@@ -172,7 +172,7 @@ public abstract class CommonDownloader {
 			}
 			trueRequestURL = trueRequestURL.substring(0, trueRequestURL.lastIndexOf("&"));
 			URL url = new URL(trueRequestURL);
-			CommonConnection connection = CommonConnection.getInstance(url, connectionType);
+			Connection connection = Connection.getInstance(url, connectionType);
 			connection.setRequestMethod("GET");
 			// 如果cookie不为空
 			if (cookie != null) {
@@ -187,7 +187,7 @@ public abstract class CommonDownloader {
 				ableToCaculate = true;
 				fileTotalLength = getLength;
 			}
-			//获取服务器响应头的cookie信息
+			// 获取服务器响应头的cookie信息
 			String set_cookie = connection.getHeaderField("Set-Cookie");
 			if (set_cookie != null && !set_cookie.equals("")) {
 				cookie = Cookie.newCookieInstance(set_cookie);
@@ -225,7 +225,7 @@ public abstract class CommonDownloader {
 		try {
 			String trueRequestURL = actionURL;
 			URL url = new URL(trueRequestURL);
-			CommonConnection connection = CommonConnection.getInstance(url, connectionType);
+			Connection connection = Connection.getInstance(url, connectionType);
 			connection.setRequestMethod("GET");
 			// 如果cookie不为空
 			if (cookie != null) {
@@ -240,7 +240,7 @@ public abstract class CommonDownloader {
 				ableToCaculate = true;
 				fileTotalLength = getLength;
 			}
-			//获取服务器响应头的cookie信息
+			// 获取服务器响应头的cookie信息
 			String set_cookie = connection.getHeaderField("Set-Cookie");
 			if (set_cookie != null && !set_cookie.equals("")) {
 				cookie = Cookie.newCookieInstance(set_cookie);
@@ -288,7 +288,7 @@ public abstract class CommonDownloader {
 			}
 			trueRequestURL = trueRequestURL.substring(0, trueRequestURL.lastIndexOf("&"));
 			URL url = new URL(trueRequestURL);
-			CommonConnection connection = CommonConnection.getInstance(url, connectionType);
+			Connection connection = Connection.getInstance(url, connectionType);
 			connection.setRequestMethod("GET");
 			// 如果cookie不为空
 			if (cookie != null) {
@@ -303,7 +303,7 @@ public abstract class CommonDownloader {
 				ableToCaculate = true;
 				fileTotalLength = getLength;
 			}
-			//获取服务器响应头的cookie信息
+			// 获取服务器响应头的cookie信息
 			String set_cookie = connection.getHeaderField("Set-Cookie");
 			if (set_cookie != null && !set_cookie.equals("")) {
 				cookie = Cookie.newCookieInstance(set_cookie);
@@ -344,7 +344,7 @@ public abstract class CommonDownloader {
 		try {
 			String trueRequestURL = actionURL;
 			URL url = new URL(trueRequestURL);
-			CommonConnection connection = CommonConnection.getInstance(url, connectionType);
+			Connection connection = Connection.getInstance(url, connectionType);
 			connection.setRequestMethod("GET");
 			// 如果cookie不为空
 			if (cookie != null) {
@@ -359,7 +359,7 @@ public abstract class CommonDownloader {
 				ableToCaculate = true;
 				fileTotalLength = getLength;
 			}
-			//获取服务器响应头的cookie信息
+			// 获取服务器响应头的cookie信息
 			String set_cookie = connection.getHeaderField("Set-Cookie");
 			if (set_cookie != null && !set_cookie.equals("")) {
 				cookie = Cookie.newCookieInstance(set_cookie);
@@ -408,7 +408,7 @@ public abstract class CommonDownloader {
 			}
 			trueRequestURL = trueRequestURL.substring(0, trueRequestURL.lastIndexOf("&"));
 			URL url = new URL(trueRequestURL);
-			CommonConnection connection = CommonConnection.getInstance(url, connectionType);
+			Connection connection = Connection.getInstance(url, connectionType);
 			connection.setRequestMethod("GET");
 			// 如果cookie不为空
 			if (cookie != null) {
@@ -423,7 +423,7 @@ public abstract class CommonDownloader {
 				ableToCaculate = true;
 				fileTotalLength = getLength;
 			}
-			//获取服务器响应头的cookie信息
+			// 获取服务器响应头的cookie信息
 			String set_cookie = connection.getHeaderField("Set-Cookie");
 			if (set_cookie != null && !set_cookie.equals("")) {
 				cookie = Cookie.newCookieInstance(set_cookie);
@@ -462,7 +462,7 @@ public abstract class CommonDownloader {
 		byte[] data = new byte[0];
 		try {
 			URL url = new URL(actionURL);
-			CommonConnection connection = CommonConnection.getInstance(url, connectionType);
+			Connection connection = Connection.getInstance(url, connectionType);
 			DataUtils.setPostConnectionPropertiesByURLEncoded(connection);
 			// 如果cookie不为空
 			if (cookie != null) {
@@ -488,7 +488,7 @@ public abstract class CommonDownloader {
 				ableToCaculate = true;
 				fileTotalLength = getLength;
 			}
-			//获取服务器响应头的cookie信息
+			// 获取服务器响应头的cookie信息
 			String set_cookie = connection.getHeaderField("Set-Cookie");
 			if (set_cookie != null && !set_cookie.equals("")) {
 				cookie = Cookie.newCookieInstance(set_cookie);
@@ -527,7 +527,7 @@ public abstract class CommonDownloader {
 		boolean flag = false;
 		try {
 			URL url = new URL(actionURL);
-			CommonConnection connection = CommonConnection.getInstance(url, connectionType);
+			Connection connection = Connection.getInstance(url, connectionType);
 			DataUtils.setPostConnectionPropertiesByURLEncoded(connection);
 			// 如果cookie不为空
 			if (cookie != null) {
@@ -553,7 +553,7 @@ public abstract class CommonDownloader {
 				ableToCaculate = true;
 				fileTotalLength = getLength;
 			}
-			//获取服务器响应头的cookie信息
+			// 获取服务器响应头的cookie信息
 			String set_cookie = connection.getHeaderField("Set-Cookie");
 			if (set_cookie != null && !set_cookie.equals("")) {
 				cookie = Cookie.newCookieInstance(set_cookie);
@@ -594,7 +594,7 @@ public abstract class CommonDownloader {
 		boolean flag = false;
 		try {
 			URL url = new URL(actionURL);
-			CommonConnection connection = CommonConnection.getInstance(url, connectionType);
+			Connection connection = Connection.getInstance(url, connectionType);
 			DataUtils.setPostConnectionPropertiesByURLEncoded(connection);
 			// 如果cookie不为空
 			if (cookie != null) {
@@ -620,7 +620,7 @@ public abstract class CommonDownloader {
 				ableToCaculate = true;
 				fileTotalLength = getLength;
 			}
-			//获取服务器响应头的cookie信息
+			// 获取服务器响应头的cookie信息
 			String set_cookie = connection.getHeaderField("Set-Cookie");
 			if (set_cookie != null && !set_cookie.equals("")) {
 				cookie = Cookie.newCookieInstance(set_cookie);
@@ -705,7 +705,7 @@ public abstract class CommonDownloader {
 	 * </pre>
 	 */
 	public void printCompleteRate() {
-		new CommonDownloader.CheckThread(this).start();
+		new Downloader.CheckThread(this).start();
 	}
 
 	/**
@@ -714,7 +714,7 @@ public abstract class CommonDownloader {
 	 * @param showTimeBySeconds 每隔多少秒显示一次
 	 */
 	public void printCompleteRate(int showTimeBySeconds) {
-		new CommonDownloader.CheckThread(this, showTimeBySeconds).start();
+		new Downloader.CheckThread(this, showTimeBySeconds).start();
 	}
 
 	/**
@@ -723,14 +723,14 @@ public abstract class CommonDownloader {
 	 * @Author Xuyh created at 2016年9月30日 下午5:01:33
 	 */
 	private class CheckThread extends Thread {
-		private CommonDownloader down;
+		private Downloader down;
 		private int showTime = 1000;
 
-		public CheckThread(CommonDownloader d) {
+		public CheckThread(Downloader d) {
 			down = d;
 		}
 
-		public CheckThread(CommonDownloader d, int showTime) {
+		public CheckThread(Downloader d, int showTime) {
 			down = d;
 			showTime = showTime * 1000;
 		}

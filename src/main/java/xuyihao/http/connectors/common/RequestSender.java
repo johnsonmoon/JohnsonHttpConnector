@@ -21,7 +21,7 @@ import xuyihao.http.enums.MIME_FileType;
  *
  * Created by Xuyh on 2016/12/9.
  */
-public abstract class CommonRequestSender {
+public abstract class RequestSender {
 	private int connectionType;
 	/**
 	 * cookie的配置逻辑： 每次请求发送时候都会在请求头带上cookie信息(如果cookie为null则不带上),
@@ -36,9 +36,9 @@ public abstract class CommonRequestSender {
 	 *     用法：设置连接类型
 	 *     调用setConnectionType()方法
 	 *     参数值
-	 *     CommonConnection.CONNECTION_TYPE_HTTP
+	 *     Connection.CONNECTION_TYPE_HTTP
 	 *     或
-	 *     CommonConnection.CONNECTION_TYPE_HTTPS
+	 *     Connection.CONNECTION_TYPE_HTTPS
 	 * </pre>
 	 *
 	 */
@@ -48,11 +48,11 @@ public abstract class CommonRequestSender {
 		this.connectionType = connectionType;
 	}
 
-	public CommonRequestSender() {
+	public RequestSender() {
 		bindConnectionType();
 	}
 
-	public CommonRequestSender(Cookie cookie) {
+	public RequestSender(Cookie cookie) {
 		bindConnectionType();
 		this.cookie = cookie;
 	}
@@ -87,7 +87,7 @@ public abstract class CommonRequestSender {
 		String response = "";
 		try {
 			URL url = new URL(actionURL);
-			CommonConnection connection = CommonConnection.getInstance(url, connectionType);
+			Connection connection = Connection.getInstance(url, connectionType);
 			DataUtils.setPostConnectionPropertiesByJSON(connection);
 			// 如果cookie不为空
 			if (this.cookie != null) {
@@ -129,7 +129,7 @@ public abstract class CommonRequestSender {
 		String response = "";
 		try {
 			URL url = new URL(actionURL);
-			CommonConnection connection = CommonConnection.getInstance(url, connectionType);
+			Connection connection = Connection.getInstance(url, connectionType);
 			DataUtils.setPostConnectionPropertiesByURLEncoded(connection);
 			// 如果cookie不为空
 			if (this.cookie != null) {
@@ -179,7 +179,7 @@ public abstract class CommonRequestSender {
 		String response = "";
 		try {
 			URL url = new URL(actionURL);
-			CommonConnection connection = CommonConnection.getInstance(url, connectionType);
+			Connection connection = Connection.getInstance(url, connectionType);
 			DataUtils.setPostConnectionPropertiesByMultiPart(connection);
 			// 如果存在会话，则写入会话sessionID到cookie里面
 			// 如果cookie不为空
@@ -222,7 +222,7 @@ public abstract class CommonRequestSender {
 		try {
 			String trueRequestURL = actionURL;
 			URL url = new URL(trueRequestURL);
-			CommonConnection connection = CommonConnection.getInstance(url, connectionType);
+			Connection connection = Connection.getInstance(url, connectionType);
 			connection.setRequestMethod("GET");
 			// 如果cookie不为空
 			if (this.cookie != null) {
@@ -265,7 +265,7 @@ public abstract class CommonRequestSender {
 			}
 			trueRequestURL = trueRequestURL.substring(0, trueRequestURL.lastIndexOf("&"));
 			URL url = new URL(trueRequestURL);
-			CommonConnection connection = CommonConnection.getInstance(url, connectionType);
+			Connection connection = Connection.getInstance(url, connectionType);
 			connection.setRequestMethod("GET");
 			// 如果cookie不为空
 			if (this.cookie != null) {
@@ -302,7 +302,7 @@ public abstract class CommonRequestSender {
 		String response = "";
 		try {
 			URL url = new URL(actionURL);
-			CommonConnection connection = CommonConnection.getInstance(url, connectionType);
+			Connection connection = Connection.getInstance(url, connectionType);
 			DataUtils.setPostConnectionPropertiesByMultiPart(connection);
 			// 如果cookie不为空
 			if (this.cookie != null) {
@@ -347,7 +347,7 @@ public abstract class CommonRequestSender {
 		String response = "";
 		try {
 			URL url = new URL(actionURL);
-			CommonConnection connection = CommonConnection.getInstance(url, connectionType);
+			Connection connection = Connection.getInstance(url, connectionType);
 			DataUtils.setPostConnectionPropertiesByMultiPart(connection);
 			// 如果cookie不为空
 			if (this.cookie != null) {
@@ -392,7 +392,7 @@ public abstract class CommonRequestSender {
 		String response = "";
 		try {
 			URL url = new URL(actionURL);
-			CommonConnection connection = CommonConnection.getInstance(url, connectionType);
+			Connection connection = Connection.getInstance(url, connectionType);
 			DataUtils.setPostConnectionPropertiesByMultiPart(connection);
 			// 如果cookie不为空
 			if (this.cookie != null) {
@@ -439,7 +439,7 @@ public abstract class CommonRequestSender {
 		String response = "";
 		try {
 			URL url = new URL(actionURL);
-			CommonConnection connection = CommonConnection.getInstance(url, connectionType);
+			Connection connection = Connection.getInstance(url, connectionType);
 			DataUtils.setPostConnectionPropertiesByMultiPart(connection);
 			if (this.cookie != null) {
 				connection.setRequestProperty("cookie", this.cookie.convertCookieToCookieValueString());

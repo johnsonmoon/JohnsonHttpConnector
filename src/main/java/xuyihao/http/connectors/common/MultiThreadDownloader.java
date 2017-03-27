@@ -23,7 +23,7 @@ import xuyihao.http.entity.Cookie;
  * 
  * Created by Xuyh on 2016/12/9.
  */
-public abstract class CommonMultiThreadDownloader {
+public abstract class MultiThreadDownloader {
 	private int connectionType;
 	/**
 	 * cookie的配置逻辑： 每次请求发送时候都会在请求头带上cookie信息(如果cookie为null则不带上),
@@ -33,7 +33,7 @@ public abstract class CommonMultiThreadDownloader {
 	private String trueRequestURL = "";
 	private int threadNum = 0;
 	private long fileSize = 0;
-	private CommonMultiThreadDownloader.DownloadThread[] threads;
+	private MultiThreadDownloader.DownloadThread[] threads;
 
 	/**
 	 * 需要重写的方法
@@ -42,9 +42,9 @@ public abstract class CommonMultiThreadDownloader {
 	 *     用法：设置连接类型
 	 *     调用setConnectionType()方法
 	 *     参数值
-	 *     CommonConnection.CONNECTION_TYPE_HTTP
+	 *     Connection.CONNECTION_TYPE_HTTP
 	 *     或
-	 *     CommonConnection.CONNECTION_TYPE_HTTPS
+	 *     Connection.CONNECTION_TYPE_HTTPS
 	 * </pre>
 	 *
 	 */
@@ -59,11 +59,11 @@ public abstract class CommonMultiThreadDownloader {
 	 * @param actionURL 需要下载资源的URL地址,不跟参数,或者直接将参数写在URL上面
 	 * @param threadNumber 需要启动的下载线程数量
 	 */
-	public CommonMultiThreadDownloader(String actionURL, int threadNumber) {
+	public MultiThreadDownloader(String actionURL, int threadNumber) {
 		bindConnectionType();
 		this.trueRequestURL = actionURL;
 		this.threadNum = threadNumber;
-		this.threads = new CommonMultiThreadDownloader.DownloadThread[this.threadNum];
+		this.threads = new MultiThreadDownloader.DownloadThread[this.threadNum];
 	}
 
 	/**
@@ -72,7 +72,7 @@ public abstract class CommonMultiThreadDownloader {
 	 * @param parameters URL后的具体参数，以key=value的形式传递
 	 * @param threadNumber 需要启动的下载线程数量
 	 */
-	public CommonMultiThreadDownloader(String actionURL, Map<String, String> parameters, int threadNumber) {
+	public MultiThreadDownloader(String actionURL, Map<String, String> parameters, int threadNumber) {
 		bindConnectionType();
 		this.trueRequestURL = actionURL;
 		trueRequestURL += "?";
@@ -82,7 +82,7 @@ public abstract class CommonMultiThreadDownloader {
 		}
 		trueRequestURL = trueRequestURL.substring(0, trueRequestURL.lastIndexOf("&"));
 		this.threadNum = threadNumber;
-		this.threads = new CommonMultiThreadDownloader.DownloadThread[this.threadNum];
+		this.threads = new MultiThreadDownloader.DownloadThread[this.threadNum];
 	}
 
 	/**
@@ -92,8 +92,7 @@ public abstract class CommonMultiThreadDownloader {
 	 * @param threadNumber 需要启动的下载线程数量
 	 * @param cookie 保持会话信息的cookie
 	 */
-	public CommonMultiThreadDownloader(String actionURL, Map<String, String> parameters, int threadNumber,
-			Cookie cookie) {
+	public MultiThreadDownloader(String actionURL, Map<String, String> parameters, int threadNumber, Cookie cookie) {
 		bindConnectionType();
 		this.trueRequestURL = actionURL;
 		trueRequestURL += "?";
@@ -103,7 +102,7 @@ public abstract class CommonMultiThreadDownloader {
 		}
 		trueRequestURL = trueRequestURL.substring(0, trueRequestURL.lastIndexOf("&"));
 		this.threadNum = threadNumber;
-		this.threads = new CommonMultiThreadDownloader.DownloadThread[this.threadNum];
+		this.threads = new MultiThreadDownloader.DownloadThread[this.threadNum];
 		this.cookie = cookie;
 	}
 
@@ -135,7 +134,7 @@ public abstract class CommonMultiThreadDownloader {
 		boolean flag = false;
 		try {
 			URL url = new URL(trueRequestURL);
-			CommonConnection connection = CommonConnection.getInstance(url, connectionType);
+			Connection connection = Connection.getInstance(url, connectionType);
 			connection.setConnectTimeout(5 * 1000);
 			connection.setRequestMethod("GET");
 			if (this.cookie != null) {
@@ -173,10 +172,9 @@ public abstract class CommonMultiThreadDownloader {
 					currentFilePart.seek(startPosition);
 					// create thread
 					if (this.cookie == null) {
-						threads[i] = new CommonMultiThreadDownloader.DownloadThread(startPosition, currentPartSize,
-								currentFilePart);
+						threads[i] = new MultiThreadDownloader.DownloadThread(startPosition, currentPartSize, currentFilePart);
 					} else {
-						threads[i] = new CommonMultiThreadDownloader.DownloadThread(startPosition, currentPartSize, currentFilePart,
+						threads[i] = new MultiThreadDownloader.DownloadThread(startPosition, currentPartSize, currentFilePart,
 								this.cookie);
 					}
 					threads[i].start();
@@ -206,7 +204,7 @@ public abstract class CommonMultiThreadDownloader {
 		boolean flag = false;
 		try {
 			URL url = new URL(trueRequestURL);
-			CommonConnection connection = CommonConnection.getInstance(url, connectionType);
+			Connection connection = Connection.getInstance(url, connectionType);
 			connection.setConnectTimeout(5 * 1000);
 			connection.setRequestMethod("GET");
 			if (this.cookie != null) {
@@ -252,11 +250,10 @@ public abstract class CommonMultiThreadDownloader {
 						currentFilePart.seek(startPosition);
 						// create thread
 						if (this.cookie == null) {
-							threads[i] = new CommonMultiThreadDownloader.DownloadThread(startPosition, currentPartSize,
-									currentFilePart);
+							threads[i] = new MultiThreadDownloader.DownloadThread(startPosition, currentPartSize, currentFilePart);
 						} else {
-							threads[i] = new CommonMultiThreadDownloader.DownloadThread(startPosition, currentPartSize,
-									currentFilePart, this.cookie);
+							threads[i] = new MultiThreadDownloader.DownloadThread(startPosition, currentPartSize, currentFilePart,
+									this.cookie);
 						}
 						threads[i].start();
 					}
@@ -281,7 +278,7 @@ public abstract class CommonMultiThreadDownloader {
 	 * @return
 	 */
 	public double getCompleteRate() {
-		for (CommonMultiThreadDownloader.DownloadThread thread : threads) {
+		for (MultiThreadDownloader.DownloadThread thread : threads) {
 			if (thread == null) {
 				return -1.0;
 			}
@@ -329,7 +326,7 @@ public abstract class CommonMultiThreadDownloader {
 		public void run() {
 			try {
 				URL url = new URL(trueRequestURL);
-				CommonConnection connection = CommonConnection.getInstance(url, connectionType);
+				Connection connection = Connection.getInstance(url, connectionType);
 				connection.setConnectTimeout(5 * 1000);
 				connection.setRequestMethod("GET");
 				if (this.cookie != null) {

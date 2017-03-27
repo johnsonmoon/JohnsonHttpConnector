@@ -13,16 +13,19 @@ import java.net.ProtocolException;
 import java.net.URL;
 
 /**
+ * 网络连接类
+ * 
  * <pre>
  * 对
  * java.net.HttpURLConnection
- * 以及javax.net.ssl.HttpsURLConnection
+ * 以及
+ * javax.net.ssl.HttpsURLConnection
  * 进行简单的封装
  * </pre>
  * 
  * Created by Xuyh on 2016/12/9.
  */
-public class CommonConnection {
+public class Connection {
 	/**
 	 * 连接类型：HTTP
 	 */
@@ -43,8 +46,8 @@ public class CommonConnection {
 	 * @param url
 	 * @param connectionType 1:http--2:https
 	 */
-	public static CommonConnection getInstance(URL url, int connectionType) {
-		return new CommonConnection(url, connectionType);
+	public static Connection getInstance(URL url, int connectionType) {
+		return new Connection(url, connectionType);
 	}
 
 	/**
@@ -53,7 +56,7 @@ public class CommonConnection {
 	 * @param url
 	 * @param connectionType 1:http--2:https
 	 */
-	public CommonConnection(URL url, int connectionType) {
+	public Connection(URL url, int connectionType) {
 		try {
 			if (connectionType == 1) {
 				this.connectionType = 1;

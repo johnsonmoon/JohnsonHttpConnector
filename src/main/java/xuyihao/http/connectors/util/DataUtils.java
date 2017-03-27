@@ -5,7 +5,7 @@ import java.net.ProtocolException;
 import java.util.Map;
 import java.util.Set;
 
-import xuyihao.http.connectors.common.CommonConnection;
+import xuyihao.http.connectors.common.Connection;
 import xuyihao.http.enums.MIME_FileType;
 import xuyihao.http.util.RandomUtils;
 
@@ -33,7 +33,7 @@ public class DataUtils {
 	 * 
 	 * @param connection
 	 */
-	public static void setPostConnectionPropertiesByJSON(CommonConnection connection) {
+	public static void setPostConnectionPropertiesByJSON(Connection connection) {
 		try {
 			connection.setDoInput(true);
 			connection.setDoOutput(true);
@@ -52,7 +52,7 @@ public class DataUtils {
 	 * 
 	 * @param connection
 	 */
-	public static void setPostConnectionPropertiesByURLEncoded(CommonConnection connection) {
+	public static void setPostConnectionPropertiesByURLEncoded(Connection connection) {
 		try {
 			connection.setDoInput(true);
 			connection.setDoOutput(true);
@@ -71,7 +71,7 @@ public class DataUtils {
 	 *
 	 * @param connection
 	 */
-	public static void setPostConnectionPropertiesByMultiPart(CommonConnection connection) {
+	public static void setPostConnectionPropertiesByMultiPart(Connection connection) {
 		try {
 			// 发送post请求需要下面两行
 			connection.setDoInput(true);

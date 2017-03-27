@@ -1,6 +1,6 @@
 package xuyihao.http.connectors;
 
-import java.util.HashMap;
+import java.util.Map;
 
 import xuyihao.http.connectors.http.HttpDownloader;
 import xuyihao.http.connectors.http.HttpMultiThreadDownloader;
@@ -147,8 +147,8 @@ public class ConnectorFactory {
 	 * @param threadNumber 需要启动的下载线程数量
 	 * @return
 	 */
-	public static HttpMultiThreadDownloader getHttpMultiThreadDownloader(String actionURL,
-			HashMap<String, String> parameters, int threadNumber) {
+	public static HttpMultiThreadDownloader getHttpMultiThreadDownloader(String actionURL, Map<String, String> parameters,
+			int threadNumber) {
 		return HttpMultiThreadDownloader.getInstance(actionURL, parameters, threadNumber);
 	}
 
@@ -161,8 +161,8 @@ public class ConnectorFactory {
 	 * @param cookie 保持会话信息的cookie
 	 * @return
 	 */
-	public static HttpMultiThreadDownloader getHttpMultiThreadDownloader(String actionURL,
-			HashMap<String, String> parameters, int threadNumber, Cookie cookie) {
+	public static HttpMultiThreadDownloader getHttpMultiThreadDownloader(String actionURL, Map<String, String> parameters,
+			int threadNumber, Cookie cookie) {
 		return HttpMultiThreadDownloader.getInstance(actionURL, parameters, threadNumber, cookie);
 	}
 
@@ -186,7 +186,7 @@ public class ConnectorFactory {
 	 * @return
 	 */
 	public static HttpsMultiThreadDownloader getHttpsMultiThreadDownloader(String actionURL,
-			HashMap<String, String> parameters, int threadNumber) {
+			Map<String, String> parameters, int threadNumber) {
 		return HttpsMultiThreadDownloader.getInstance(actionURL, parameters, threadNumber);
 	}
 
@@ -200,7 +200,7 @@ public class ConnectorFactory {
 	 * @return
 	 */
 	public static HttpsMultiThreadDownloader getHttpsMultiThreadDownloader(String actionURL,
-			HashMap<String, String> parameters, int threadNumber, Cookie cookie) {
+			Map<String, String> parameters, int threadNumber, Cookie cookie) {
 		return HttpsMultiThreadDownloader.getInstance(actionURL, parameters, threadNumber, cookie);
 	}
 }

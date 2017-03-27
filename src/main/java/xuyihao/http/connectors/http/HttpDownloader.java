@@ -1,7 +1,7 @@
 package xuyihao.http.connectors.http;
 
-import xuyihao.http.connectors.common.CommonConnection;
-import xuyihao.http.connectors.common.CommonDownloader;
+import xuyihao.http.connectors.common.Connection;
+import xuyihao.http.connectors.common.Downloader;
 import xuyihao.http.entity.Cookie;
 
 /**
@@ -23,7 +23,7 @@ import xuyihao.http.entity.Cookie;
  * 
  * @Author Xuyh created at 2016年9月30日 下午4:34:39
  */
-public class HttpDownloader extends CommonDownloader {
+public class HttpDownloader extends Downloader {
 	/**
 	 * 获取HttpDownloader实例对象
 	 * 
@@ -51,6 +51,6 @@ public class HttpDownloader extends CommonDownloader {
 	}
 
 	protected void bindConnectionType() {
-		setConnectionType(CommonConnection.CONNECTION_TYPE_HTTP);
+		setConnectionType(Connection.CONNECTION_TYPE_HTTP);
 	}
 }

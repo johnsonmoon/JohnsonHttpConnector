@@ -1,9 +1,9 @@
 package xuyihao.http.connectors.https;
 
-import java.util.HashMap;
+import java.util.Map;
 
-import xuyihao.http.connectors.common.CommonConnection;
-import xuyihao.http.connectors.common.CommonMultiThreadDownloader;
+import xuyihao.http.connectors.common.Connection;
+import xuyihao.http.connectors.common.MultiThreadDownloader;
 import xuyihao.http.entity.Cookie;
 
 /**
@@ -19,7 +19,7 @@ import xuyihao.http.entity.Cookie;
  * 
  * Created by Xuyh on 2016/12/9.
  */
-public class HttpsMultiThreadDownloader extends CommonMultiThreadDownloader {
+public class HttpsMultiThreadDownloader extends MultiThreadDownloader {
 	/**
 	 * 获取HttpsMultiThreadDownloader实例对象
 	 * 
@@ -39,7 +39,7 @@ public class HttpsMultiThreadDownloader extends CommonMultiThreadDownloader {
 	 * @param threadNumber 需要启动的下载线程数量
 	 * @return
 	 */
-	public static HttpsMultiThreadDownloader getInstance(String actionURL, HashMap<String, String> parameters,
+	public static HttpsMultiThreadDownloader getInstance(String actionURL, Map<String, String> parameters,
 			int threadNumber) {
 		return new HttpsMultiThreadDownloader(actionURL, parameters, threadNumber);
 	}
@@ -53,7 +53,7 @@ public class HttpsMultiThreadDownloader extends CommonMultiThreadDownloader {
 	 * @param cookie 保持会话信息的cookie
 	 * @return
 	 */
-	public static HttpsMultiThreadDownloader getInstance(String actionURL, HashMap<String, String> parameters,
+	public static HttpsMultiThreadDownloader getInstance(String actionURL, Map<String, String> parameters,
 			int threadNumber, Cookie cookie) {
 		return new HttpsMultiThreadDownloader(actionURL, parameters, threadNumber, cookie);
 	}
@@ -62,16 +62,16 @@ public class HttpsMultiThreadDownloader extends CommonMultiThreadDownloader {
 		super(actionURL, threadNumber);
 	}
 
-	private HttpsMultiThreadDownloader(String actionURL, HashMap<String, String> parameters, int threadNumber) {
+	private HttpsMultiThreadDownloader(String actionURL, Map<String, String> parameters, int threadNumber) {
 		super(actionURL, parameters, threadNumber);
 	}
 
-	private HttpsMultiThreadDownloader(String actionURL, HashMap<String, String> parameters, int threadNumber,
+	private HttpsMultiThreadDownloader(String actionURL, Map<String, String> parameters, int threadNumber,
 			Cookie cookie) {
 		super(actionURL, parameters, threadNumber, cookie);
 	}
 
 	protected void bindConnectionType() {
-		setConnectionType(CommonConnection.CONNECTION_TYPE_HTTPS);
+		setConnectionType(Connection.CONNECTION_TYPE_HTTPS);
 	}
 }
