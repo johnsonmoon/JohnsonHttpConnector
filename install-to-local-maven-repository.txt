@@ -1,0 +1,1 @@
+mvn install:install-file -Dfile=C:\\Users\Administrator\\Desktop\My-Projects\\JohnsonHttpConnector\\target\\JohnsonHttpConnector.jar -DgroupId=xuyihao -DartifactId=http-connector -Dversion=1.0.0 -Dpackaging=jar
