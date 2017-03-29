@@ -117,7 +117,7 @@ public abstract class Downloader {
 			connection.setRequestMethod("GET");
 			// 如果cookie不为空
 			if (cookie != null) {
-				connection.setRequestProperty("cookie", cookie.convertCookieToCookieValueString());
+				connection.setRequestProperty("Cookie", cookie.convertCookieToCookieValueString());
 			}
 			// get the length of the file, if get, set ableToCaculate true
 			long getLength = connection.getContentLength();
@@ -176,7 +176,7 @@ public abstract class Downloader {
 			connection.setRequestMethod("GET");
 			// 如果cookie不为空
 			if (cookie != null) {
-				connection.setRequestProperty("cookie", cookie.convertCookieToCookieValueString());
+				connection.setRequestProperty("Cookie", cookie.convertCookieToCookieValueString());
 			}
 			// get the length of the file, if get, set ableToCaculate true
 			long getLength = connection.getContentLength();
@@ -229,7 +229,7 @@ public abstract class Downloader {
 			connection.setRequestMethod("GET");
 			// 如果cookie不为空
 			if (cookie != null) {
-				connection.setRequestProperty("cookie", cookie.convertCookieToCookieValueString());
+				connection.setRequestProperty("Cookie", cookie.convertCookieToCookieValueString());
 			}
 			// get the length of the file, if get, set ableToCaculate true
 			long getLength = connection.getContentLength();
@@ -292,7 +292,7 @@ public abstract class Downloader {
 			connection.setRequestMethod("GET");
 			// 如果cookie不为空
 			if (cookie != null) {
-				connection.setRequestProperty("cookie", cookie.convertCookieToCookieValueString());
+				connection.setRequestProperty("Cookie", cookie.convertCookieToCookieValueString());
 			}
 			// get the length of the file, if get, set ableToCaculate true
 			long getLength = connection.getContentLength();
@@ -348,7 +348,7 @@ public abstract class Downloader {
 			connection.setRequestMethod("GET");
 			// 如果cookie不为空
 			if (cookie != null) {
-				connection.setRequestProperty("cookie", cookie.convertCookieToCookieValueString());
+				connection.setRequestProperty("Cookie", cookie.convertCookieToCookieValueString());
 			}
 			// get the length of the file, if get, set ableToCaculate true
 			long getLength = connection.getContentLength();
@@ -412,7 +412,7 @@ public abstract class Downloader {
 			connection.setRequestMethod("GET");
 			// 如果cookie不为空
 			if (cookie != null) {
-				connection.setRequestProperty("cookie", cookie.convertCookieToCookieValueString());
+				connection.setRequestProperty("Cookie", cookie.convertCookieToCookieValueString());
 			}
 			// get the length of the file, if get, set ableToCaculate true
 			long getLength = connection.getContentLength();
@@ -466,7 +466,7 @@ public abstract class Downloader {
 			DataUtils.setPostConnectionPropertiesByURLEncoded(connection);
 			// 如果cookie不为空
 			if (cookie != null) {
-				connection.setRequestProperty("cookie", cookie.convertCookieToCookieValueString());
+				connection.setRequestProperty("Cookie", cookie.convertCookieToCookieValueString());
 			}
 			// 设置请求数据内容
 			String requestContent = "";
@@ -531,7 +531,7 @@ public abstract class Downloader {
 			DataUtils.setPostConnectionPropertiesByURLEncoded(connection);
 			// 如果cookie不为空
 			if (cookie != null) {
-				connection.setRequestProperty("cookie", cookie.convertCookieToCookieValueString());
+				connection.setRequestProperty("Cookie", cookie.convertCookieToCookieValueString());
 			}
 			// 设置请求数据内容
 			String requestContent = "";
@@ -598,7 +598,7 @@ public abstract class Downloader {
 			DataUtils.setPostConnectionPropertiesByURLEncoded(connection);
 			// 如果cookie不为空
 			if (cookie != null) {
-				connection.setRequestProperty("cookie", cookie.convertCookieToCookieValueString());
+				connection.setRequestProperty("Cookie", cookie.convertCookieToCookieValueString());
 			}
 			// 设置请求数据内容
 			String requestContent = "";

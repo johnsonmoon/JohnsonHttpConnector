@@ -91,7 +91,7 @@ public abstract class RequestSender {
 			DataUtils.setPostConnectionPropertiesByJSON(connection);
 			// 如果cookie不为空
 			if (this.cookie != null) {
-				connection.setRequestProperty("cookie", this.cookie.convertCookieToCookieValueString());
+				connection.setRequestProperty("Cookie", this.cookie.convertCookieToCookieValueString());
 			}
 			// 设置请求数据内容
 			DataOutputStream ds = new DataOutputStream(connection.getOutputStream());
@@ -133,7 +133,7 @@ public abstract class RequestSender {
 			DataUtils.setPostConnectionPropertiesByURLEncoded(connection);
 			// 如果cookie不为空
 			if (this.cookie != null) {
-				connection.setRequestProperty("cookie", this.cookie.convertCookieToCookieValueString());
+				connection.setRequestProperty("Cookie", this.cookie.convertCookieToCookieValueString());
 			}
 			// 设置请求数据内容
 			String requestContent = "";
@@ -184,7 +184,7 @@ public abstract class RequestSender {
 			// 如果存在会话，则写入会话sessionID到cookie里面
 			// 如果cookie不为空
 			if (this.cookie != null) {
-				connection.setRequestProperty("cookie", this.cookie.convertCookieToCookieValueString());
+				connection.setRequestProperty("Cookie", this.cookie.convertCookieToCookieValueString());
 			}
 			DataOutputStream ds = new DataOutputStream(connection.getOutputStream());
 			DataUtils.addPostCommonData(parameters, ds);
@@ -226,7 +226,7 @@ public abstract class RequestSender {
 			connection.setRequestMethod("GET");
 			// 如果cookie不为空
 			if (this.cookie != null) {
-				connection.setRequestProperty("cookie", this.cookie.convertCookieToCookieValueString());
+				connection.setRequestProperty("Cookie", this.cookie.convertCookieToCookieValueString());
 			}
 			// 获取服务器响应头的cookie信息
 			String set_cookie = connection.getHeaderField("Set-Cookie");
@@ -269,7 +269,7 @@ public abstract class RequestSender {
 			connection.setRequestMethod("GET");
 			// 如果cookie不为空
 			if (this.cookie != null) {
-				connection.setRequestProperty("cookie", this.cookie.convertCookieToCookieValueString());
+				connection.setRequestProperty("Cookie", this.cookie.convertCookieToCookieValueString());
 			}
 			// 获取服务器响应头的cookie信息
 			String set_cookie = connection.getHeaderField("Set-Cookie");
@@ -306,7 +306,7 @@ public abstract class RequestSender {
 			DataUtils.setPostConnectionPropertiesByMultiPart(connection);
 			// 如果cookie不为空
 			if (this.cookie != null) {
-				connection.setRequestProperty("cookie", this.cookie.convertCookieToCookieValueString());
+				connection.setRequestProperty("Cookie", this.cookie.convertCookieToCookieValueString());
 			}
 			DataOutputStream ds = new DataOutputStream(connection.getOutputStream());
 			String fileName = uploadFile.substring(uploadFile.lastIndexOf(File.separator) + 1);
@@ -351,7 +351,7 @@ public abstract class RequestSender {
 			DataUtils.setPostConnectionPropertiesByMultiPart(connection);
 			// 如果cookie不为空
 			if (this.cookie != null) {
-				connection.setRequestProperty("cookie", this.cookie.convertCookieToCookieValueString());
+				connection.setRequestProperty("Cookie", this.cookie.convertCookieToCookieValueString());
 			}
 			DataOutputStream ds = new DataOutputStream(connection.getOutputStream());
 			DataUtils.addPostMultiFileData(uploadFiles, formFileNames, ds, fileType);
@@ -396,7 +396,7 @@ public abstract class RequestSender {
 			DataUtils.setPostConnectionPropertiesByMultiPart(connection);
 			// 如果cookie不为空
 			if (this.cookie != null) {
-				connection.setRequestProperty("cookie", this.cookie.convertCookieToCookieValueString());
+				connection.setRequestProperty("Cookie", this.cookie.convertCookieToCookieValueString());
 			}
 			DataOutputStream ds = new DataOutputStream(connection.getOutputStream());
 			String fileName = uploadFile.substring(uploadFile.lastIndexOf(File.separator) + 1);
@@ -442,7 +442,7 @@ public abstract class RequestSender {
 			Connection connection = Connection.getInstance(url, connectionType);
 			DataUtils.setPostConnectionPropertiesByMultiPart(connection);
 			if (this.cookie != null) {
-				connection.setRequestProperty("cookie", this.cookie.convertCookieToCookieValueString());
+				connection.setRequestProperty("Cookie", this.cookie.convertCookieToCookieValueString());
 			}
 			DataOutputStream ds = new DataOutputStream(connection.getOutputStream());
 			DataUtils.addPostCommonData(parameters, ds);

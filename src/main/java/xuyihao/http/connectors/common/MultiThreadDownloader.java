@@ -138,7 +138,7 @@ public abstract class MultiThreadDownloader {
 			connection.setConnectTimeout(5 * 1000);
 			connection.setRequestMethod("GET");
 			if (this.cookie != null) {
-				connection.setRequestProperty("cookie", this.cookie.convertCookieToCookieValueString());
+				connection.setRequestProperty("Cookie", this.cookie.convertCookieToCookieValueString());
 			}
 			connection.setRequestProperty("Accept",
 					"image/gif, image/jpeg, image/pjpeg, image/pjpeg, " + "application/x-shockwave-flash, application/xaml+xml, "
@@ -208,7 +208,7 @@ public abstract class MultiThreadDownloader {
 			connection.setConnectTimeout(5 * 1000);
 			connection.setRequestMethod("GET");
 			if (this.cookie != null) {
-				connection.setRequestProperty("cookie", this.cookie.convertCookieToCookieValueString());
+				connection.setRequestProperty("Cookie", this.cookie.convertCookieToCookieValueString());
 			}
 			connection.setRequestProperty("Accept",
 					"image/gif, image/jpeg, image/pjpeg, image/pjpeg, " + "application/x-shockwave-flash, application/xaml+xml, "
@@ -330,7 +330,7 @@ public abstract class MultiThreadDownloader {
 				connection.setConnectTimeout(5 * 1000);
 				connection.setRequestMethod("GET");
 				if (this.cookie != null) {
-					connection.setRequestProperty("cookie", this.cookie.convertCookieToCookieValueString());
+					connection.setRequestProperty("Cookie", this.cookie.convertCookieToCookieValueString());
 				}
 				connection.setRequestProperty("Accept",
 						"image/gif, image/jpeg, image/pjpeg, image/pjpeg, "

@@ -55,7 +55,8 @@ public class ConnectorFactory {
 	 */
 	public static HttpRequestSender getHttpRequestSender(Cookie cookie) {
 		if (httpRequestSender == null)
-			httpRequestSender = HttpRequestSender.getInstance(cookie);
+			httpRequestSender = HttpRequestSender.getInstance();
+		httpRequestSender.setCookie(cookie);
 		return httpRequestSender;
 	}
 
@@ -78,7 +79,8 @@ public class ConnectorFactory {
 	 */
 	public static HttpDownloader getHttpDownloader(Cookie cookie) {
 		if (httpDownloader == null)
-			httpDownloader = HttpDownloader.getInstance(cookie);
+			httpDownloader = HttpDownloader.getInstance();
+		httpDownloader.setCookie(cookie);
 		return httpDownloader;
 	}
 
@@ -101,7 +103,8 @@ public class ConnectorFactory {
 	 */
 	public static HttpsRequestSender getHttpsRequestSender(Cookie cookie) {
 		if (httpsRequestSender == null)
-			httpsRequestSender = HttpsRequestSender.getInstance(cookie);
+			httpsRequestSender = HttpsRequestSender.getInstance();
+		httpsRequestSender.setCookie(cookie);
 		return httpsRequestSender;
 	}
 
@@ -124,7 +127,8 @@ public class ConnectorFactory {
 	 */
 	public static HttpsDownloader getHttpsDownloader(Cookie cookie) {
 		if (httpsDownloader == null)
-			httpsDownloader = HttpsDownloader.getInstance(cookie);
+			httpsDownloader = HttpsDownloader.getInstance();
+		httpsDownloader.setCookie(cookie);
 		return httpsDownloader;
 	}
 
